@@ -1,0 +1,23 @@
+{
+  "name": "project-kilo",
+  "version": "1.0.0",
+  "description": "code editor inspired by doom emacs, 4coder, dion, and a random image of randy in the video \"inverse kinematics\"",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/virtualout/project-kilo.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/virtualout/project-kilo/issues"
+  },
+  "homepage": "https://github.com/virtualout/project-kilo#readme",
+  "dependencies": {
+    "electron": "^15.3.0"
+  }
+}
