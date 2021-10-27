@@ -1,12 +1,14 @@
 const { app, BrowserWindow } = require('electron')
+const path = require("path");
+const fs = require("fs");
 
 const createWindow = () => {
   const win = new BrowserWindow({
     autoHideMenuBar: true,
     webPreferences: {
-      nodeIntegration: true, // importnat
-      contextIsolation: true, // protect against prototype pollution
-      enableRemoteModule: true //for forcing full screen
+      nodeIntegration: true, 
+      contextIsolation: true, 
+      preload: "./preload/index.js"
     }
   })
 
