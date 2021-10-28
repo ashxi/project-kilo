@@ -1,0 +1,12 @@
+.sidebar {
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    padding: 0; 
+    margin: 0;
+    display: block;
+    height: 100%;
+    width: 50px;
+    background-color: var(--secondary-background);
+    z-index: 1;
+}

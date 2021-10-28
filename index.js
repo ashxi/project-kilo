@@ -1,20 +1,39 @@
-const { app, BrowserWindow } = require('electron')
-const path = require("path");
-const fs = require("fs");
+const {app, BrowserWindow} = require('electron');
+let mainWindow;
 
-const createWindow = () => {
-  const win = new BrowserWindow({
-    autoHideMenuBar: true,
-    webPreferences: {
-      nodeIntegration: true, 
-      contextIsolation: true, 
-      preload: "./preload/index.js"
-    }
-  })
+function createWindow () {
+    mainWindow = new BrowserWindow({
+        width: 800,
+        height: 600,
+        frame: false,
+        backgroundColor: '#FFF',
+        webPreferences: {
+            nodeIntegration: true,
+            enableRemoteModule: true,
+            preload: __dirname + "/src/preload.js"
+        } 
+    });
 
-  win.loadFile('./src/index.html')
+    require('@electron/remote/main').initialize();
+    require("@electron/remote/main").enable(mainWindow.webContents)
+
+    mainWindow.loadFile('./src/index.html');
+
+    mainWindow.on('closed', () => {
+        mainWindow = null;
+    });
 }
 
-app.whenReady().then(() => {
-  createWindow()
-})
+app.on('ready', createWindow);
+
+app.on('window-all-closed', function () {
+    if (process.platform !== 'darwin') {
+        app.quit();
+    }
+});
+
+app.on('activate', function () {
+    if (mainWindow === null) {
+        createWindow();
+    }
+});

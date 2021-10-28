@@ -1,7 +1,7 @@
 {
-  "name": "concrete",
+  "name": "project-kilo",
   "version": "1.0.0",
-  "description": "code editor inspired by doom emacs, 4coder, dion, and a random image of randy in the video \"inverse kinematics\"",
+  "description": "A malleable yet a powerful and strong IDE, written in Electron.\r ## What are you inspired by?\r We are inspired by doom emacs, 4coder, dion, and a random image of randy in the video \"inverse kinematics\".",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -19,6 +19,7 @@
   },
   "homepage": "https://github.com/virtualout/project-kilo#readme",
   "dependencies": {
+    "@electron/remote": "^2.0.1",
     "electron": "^15.3.0"
   }
 }
