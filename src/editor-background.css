@@ -1,7 +1,3 @@
-:root {
-    --sidebar-length: 50px;
-}
-
 .sidebar {
     position: absolute;
     left: 0px;

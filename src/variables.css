@@ -1,0 +1,5 @@
+:root {
+    /* For looks in the main window. */
+    --sidebar-length: 50px;
+    --titlebar-height: 32px;
+}
