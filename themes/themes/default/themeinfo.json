@@ -1,5 +1,6 @@
 {
     "name": "Default Theme",
     "shortname": "default",
-    "path": "./default.css"
+    "path": "./default.css",
+    "license": "./license.txt"
 }

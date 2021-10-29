@@ -1,3 +1,0 @@
-These icons are based on vscode-fluent-icons, which can be found at https://github.com/misolori/vscode-fluent-icons.
-
-This software is based off of the MIT license, the same one this project uses.
