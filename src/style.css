@@ -2,6 +2,7 @@
 html {box-sizing: border-box;}
 *, *:before, *:after {box-sizing: inherit;}
 html, body {height: 100%; margin: 0;}
+:root {--titlebar-height: 32px;}
 
 body {
   font-family: "Segoe UI", sans-serif;
@@ -29,7 +30,7 @@ body {
 #titlebar {
   display: block;
   position: fixed;
-  height: 32px;
+  height: var(--titlebar-height);
   width: calc(100% - 2px);
 }
 

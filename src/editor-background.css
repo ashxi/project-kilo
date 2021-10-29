@@ -1,3 +1,7 @@
+:root {
+    --sidebar-length: 50px;
+}
+
 .sidebar {
     position: absolute;
     left: 0px;
@@ -6,7 +10,17 @@
     margin: 0;
     display: block;
     height: 100%;
-    width: 50px;
+    width: var(--sidebar-length);
     background-color: var(--secondary-background);
     z-index: 1;
+}
+
+.main {
+    position: absolute;
+    left: 0px;
+    top: var(--titlebar-height);
+    left: var(--sidebar-length);
+    height: calc(100%);
+    width: calc(100% - 50px);
+    z-index: 10;
 }

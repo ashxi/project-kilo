@@ -1,8 +1,8 @@
-document.addEventListener("DOMContentLoaded", function(event) {
+document.addEventListener("DOMContentLoaded", function() {
     require('./renderer.js')
 })
 
-document.addEventListener("DOMContentLoaded", function(event) {
+document.addEventListener("DOMContentLoaded", function() {
     async function main() {
         function sleep(ms) {
             return new Promise(resolve => setTimeout(resolve, ms));
