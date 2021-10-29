@@ -1,18 +1,32 @@
 document.addEventListener("DOMContentLoaded", function() {
-    require('./renderer.js')
-})
-
-document.addEventListener("DOMContentLoaded", function() {
     async function main() {
-        function sleep(ms) {
-            return new Promise(resolve => setTimeout(resolve, ms));
+        async function loadInit() {
+            const fs = require("fs");
+
+            const data = fs.readFileSync(__dirname + "/base.html", {encoding:'utf8', flag:'r'});
+            let otherData = document.body.innerHTML;
+            document.body.innerHTML = data + `<div class="main">` + otherData + `</div>`;
         }
 
-        while (true) {
-            document.getElementById("editorTitle").innerHTML = document.title;
-            await sleep(50);
+        async function loadTitle() {
+            function sleep(ms) {
+                return new Promise(resolve => setTimeout(resolve, ms));
+            }
+    
+            while (true) {
+                document.getElementById("editorTitle").innerHTML = document.title;
+                await sleep(50);
+            }
         }
+
+        function loadRenderer() {
+            require('./renderer.js');
+        }
+
+        await loadInit();
+        await loadRenderer();
+        await loadTitle();
     }
 
-    main()
-})
+    main();
+}) 
