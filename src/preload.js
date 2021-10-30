@@ -36,11 +36,11 @@ async function loadThemes() {
     return themes;
 }
 
-document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener("DOMContentLoaded", async function() {
     document.body.style.backgroundColor = "#344b4b";
     document.body.style.color = "#344b4b";
 
-    async function main() {
+
         let themes = [];
         async function loadInit() {
             const data = fs.readFileSync(__dirname + "/base.html", {encoding:'utf8', flag:'r'});
@@ -81,13 +81,11 @@ document.addEventListener("DOMContentLoaded", function() {
             }
         }
 
-        themes = await loadThemes();
+    themes = await loadThemes();
 
-        await loadInit();
-        loadTitle();
-        console.log("Loaded");
-        await require("./renderer.js");
-    }
+    await loadInit();
+    await require("./renderer.js");
+    await loadTitle();
 
     main();
 }) 
