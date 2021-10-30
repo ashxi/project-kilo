@@ -1,11 +1,7 @@
 const remote = require('@electron/remote');
 const win = remote.getCurrentWindow();
 
-document.onreadystatechange = (event) => {
-    if (document.readyState == "complete") {
-        handleWindowControls();
-    }
-};
+handleWindowControls();
 
 window.onbeforeunload = (event) => {
     win.removeAllListeners();

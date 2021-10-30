@@ -3,7 +3,7 @@ const { contextBridge, ipcRenderer } = require("electron")
 
 async function loadThemes() {
     let themes = [];
-    
+
     const Filehound = require('filehound'),
           path  = require("path");
 
@@ -30,7 +30,6 @@ async function loadThemes() {
                 }
                 themes.push(temp);
             } catch (error) {
-                console.error(error)
             }
         }
     
@@ -38,10 +37,12 @@ async function loadThemes() {
 }
 
 document.addEventListener("DOMContentLoaded", function() {
-    async function main() {
-        async function loadInit() {
-            document.body.style.backgroundColor = "#344b4b";
+    document.body.style.backgroundColor = "#344b4b";
+    document.body.style.color = "#344b4b";
 
+    async function main() {
+        let themes = [];
+        async function loadInit() {
             const data = fs.readFileSync(__dirname + "/base.html", {encoding:'utf8', flag:'r'});
 
             let htmlData = "";
@@ -60,6 +61,7 @@ document.addEventListener("DOMContentLoaded", function() {
             }
 
             document.body.innerHTML = data + `<div class="main">` + htmlData + `</div>`;
+            document.body.style.color = "white";
 
             var doc = new DOMParser().parseFromString(htmlData, 'text/html').getElementsByTagName('script');
             
@@ -79,13 +81,12 @@ document.addEventListener("DOMContentLoaded", function() {
             }
         }
 
-        let themes = await loadThemes();
-
-        console.log(themes);
+        themes = await loadThemes();
 
         await loadInit();
-        await require('./renderer.js');
-        await loadTitle();
+        loadTitle();
+        console.log("Loaded");
+        await require("./renderer.js");
     }
 
     main();
