@@ -1,39 +1,40 @@
 const fs = require("fs");
+const { contextBridge, ipcRenderer } = require("electron")
 
-let themes = [];
-
-function loadThemes() {
-    themes = [];
-
+async function loadThemes() {
+    let themes = [];
+    
     const Filehound = require('filehound'),
           path  = require("path");
 
     const source = path.join(__dirname, "..", "themes");
 
-    Filehound.create()
+    const dir = await Filehound.create()
         .path(source)
         .directory()
-        .find((err, subdirectories) => {
-            if (err) return console.error(err);
-        
-            for (subdirectories of subdirectories) {
-                try {
-                    let magic = fs.readFileSync(path.join(subdirectories, "themeinfo.json").toString());
-                    let temp = JSON.parse(magic);
+        .find();
 
-                    temp.license = path.join(subdirectories, temp.license);
+        for (subdirectories of dir) {
+            try {
+                let magic = fs.readFileSync(path.join(subdirectories, "themeinfo.json").toString());
+                let temp = JSON.parse(magic);
 
-                    if (temp.type == "theme") {
-                        temp.path = path.join(subdirectories, temp.license);
-                    } else if (temp.type == "windowicons") {
-                        temp.path = path.join(subdirectories);
-                    } else if (temp.type == "font") {
-                        temp.regular = path.join(subdirectories, temp.regular);
-                    }
-                    themes.push(temp);
-                } catch (error) {}
+                temp.license = path.join(subdirectories, temp.license);
+
+                if (temp.type == "theme") {
+                    temp.path = path.join(subdirectories, temp.license);
+                } else if (temp.type == "windowicons") {
+                    temp.path = path.join(subdirectories);
+                } else if (temp.type == "font") {
+                    temp.regular = path.join(subdirectories, temp.regular);
+                }
+                themes.push(temp);
+            } catch (error) {
+                console.error(error)
             }
-          });
+        }
+    
+    return themes;
 }
 
 document.addEventListener("DOMContentLoaded", function() {
@@ -42,8 +43,17 @@ document.addEventListener("DOMContentLoaded", function() {
             document.body.style.backgroundColor = "#344b4b";
 
             const data = fs.readFileSync(__dirname + "/base.html", {encoding:'utf8', flag:'r'});
+
             let htmlData = "";
-            if (localStorage.getItem("initalSetup") !== true) {
+            let themePath = "",
+                fontPath = "",
+                windowiconsPath = "";
+            
+            if (localStorage.getItem("initalSetup") != true) {
+                localStorage.setItem("theme", "default");
+                localStorage.setItem("font", "fira-code");
+                localStorage.setItem("windowicons", "vscode-fluent-icons");
+
                 htmlData = fs.readFileSync(__dirname + "/setup.html", {encoding:'utf8', flag:'r'});
             } else {
                htmlData = document.body.innerHTML;
@@ -54,7 +64,7 @@ document.addEventListener("DOMContentLoaded", function() {
             var doc = new DOMParser().parseFromString(htmlData, 'text/html').getElementsByTagName('script');
             
             for (doc of doc) {
-                eval(doc.innerHTML)
+                eval(doc.innerHTML);
             }
         }
 
@@ -69,7 +79,10 @@ document.addEventListener("DOMContentLoaded", function() {
             }
         }
 
-        await loadThemes();
+        let themes = await loadThemes();
+
+        console.log(themes);
+
         await loadInit();
         await require('./renderer.js');
         await loadTitle();
