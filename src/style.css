@@ -162,3 +162,7 @@ body {
 .maximized #max-button {
   display: none;
 }
+
+a:link, a:visited, a:hover, a:active {
+  color: white;
+};
