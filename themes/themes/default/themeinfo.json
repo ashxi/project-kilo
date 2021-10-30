@@ -2,5 +2,6 @@
     "name": "Default Theme",
     "shortname": "default",
     "path": "./default.css",
-    "license": "./license.txt"
+    "license": "./license.txt",
+    "type": "theme"
 }

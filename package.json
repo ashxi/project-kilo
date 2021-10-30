@@ -20,6 +20,7 @@
   "homepage": "https://github.com/virtualout/project-kilo#readme",
   "dependencies": {
     "@electron/remote": "^2.0.1",
-    "electron": "^15.3.0"
+    "electron": "^15.3.0",
+    "filehound": "^1.17.5"
   }
 }

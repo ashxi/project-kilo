@@ -1,5 +1,6 @@
 {
     "name": "Default (VSCode Fluent Icons)",
     "shortname": "vscode-fluent-icons",
-    "license": "./license.txt"
+    "license": "./license.txt",
+    "type": "windowicons"
 }

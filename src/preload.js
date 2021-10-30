@@ -1,8 +1,45 @@
+const fs = require("fs");
+
+let themes = [];
+
+function loadThemes() {
+    themes = [];
+
+    const Filehound = require('filehound'),
+          path  = require("path");
+
+    const source = path.join(__dirname, "..", "themes");
+
+    Filehound.create()
+        .path(source)
+        .directory()
+        .find((err, subdirectories) => {
+            if (err) return console.error(err);
+        
+            for (subdirectories of subdirectories) {
+                try {
+                    let magic = fs.readFileSync(path.join(subdirectories, "themeinfo.json").toString());
+                    let temp = JSON.parse(magic);
+
+                    temp.license = path.join(subdirectories, temp.license);
+
+                    if (temp.type == "theme") {
+                        temp.path = path.join(subdirectories, temp.license);
+                    } else if (temp.type == "windowicons") {
+                        temp.path = path.join(subdirectories);
+                    } else if (temp.type == "font") {
+                        temp.regular = path.join(subdirectories, temp.regular);
+                    }
+                    themes.push(temp);
+                } catch (error) {}
+            }
+          });
+}
+
 document.addEventListener("DOMContentLoaded", function() {
     async function main() {
         async function loadInit() {
             document.body.style.backgroundColor = "#344b4b";
-            const fs = require("fs");
 
             const data = fs.readFileSync(__dirname + "/base.html", {encoding:'utf8', flag:'r'});
             let otherData = document.body.innerHTML;
@@ -20,12 +57,9 @@ document.addEventListener("DOMContentLoaded", function() {
             }
         }
 
-        function loadRenderer() {
-            require('./renderer.js');
-        }
-
+        await loadThemes();
         await loadInit();
-        await loadRenderer();
+        await require('./renderer.js');
         await loadTitle();
     }
 
