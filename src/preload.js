@@ -42,8 +42,20 @@ document.addEventListener("DOMContentLoaded", function() {
             document.body.style.backgroundColor = "#344b4b";
 
             const data = fs.readFileSync(__dirname + "/base.html", {encoding:'utf8', flag:'r'});
-            let otherData = document.body.innerHTML;
-            document.body.innerHTML = data + `<div class="main">` + otherData + `</div>`;
+            let htmlData = "";
+            if (localStorage.getItem("initalSetup") !== true) {
+                htmlData = fs.readFileSync(__dirname + "/setup.html", {encoding:'utf8', flag:'r'});
+            } else {
+               htmlData = document.body.innerHTML;
+            }
+            
+            document.body.innerHTML = data + `<div class="main">` + htmlData + `</div>`;
+
+            var doc = new DOMParser().parseFromString(htmlData, 'text/html').getElementsByTagName('script');
+            otherData = htmlData;
+            for (doc of doc) {
+                eval(doc.innerHTML)
+            }
         }
 
         async function loadTitle() {
