@@ -41,45 +41,45 @@ document.addEventListener("DOMContentLoaded", async function() {
     document.body.style.color = "#344b4b";
 
 
-        let themes = [];
-        async function loadInit() {
-            const data = fs.readFileSync(__dirname + "/base.html", {encoding:'utf8', flag:'r'});
+    let themes = [];
+    async function loadInit() {
+        const data = fs.readFileSync(__dirname + "/base.html", {encoding:'utf8', flag:'r'});
 
-            let htmlData = "";
-            let themePath = "",
-                fontPath = "",
-                windowiconsPath = "";
+        let htmlData = "";
+        let themePath = "",
+            fontPath = "",
+            windowiconsPath = "";
             
-            if (localStorage.getItem("initalSetup") != true) {
-                localStorage.setItem("theme", "default");
-                localStorage.setItem("font", "fira-code");
-                localStorage.setItem("windowicons", "vscode-fluent-icons");
+        if (localStorage.getItem("initalSetup") != true) {
+            localStorage.setItem("theme", "default");
+            localStorage.setItem("font", "fira-code");
+            localStorage.setItem("windowicons", "vscode-fluent-icons");
 
-                htmlData = fs.readFileSync(__dirname + "/setup.html", {encoding:'utf8', flag:'r'});
-            } else {
-               htmlData = document.body.innerHTML;
-            }
-
-            document.body.innerHTML = data + `<div class="main">` + htmlData + `</div>`;
-            document.body.style.color = "white";
-
-            var doc = new DOMParser().parseFromString(htmlData, 'text/html').getElementsByTagName('script');
-            
-            for (doc of doc) {
-                eval(doc.innerHTML);
-            }
+            htmlData = fs.readFileSync(__dirname + "/setup.html", {encoding:'utf8', flag:'r'});
+        } else {
+            htmlData = document.body.innerHTML;
         }
 
-        async function loadTitle() {
-            function sleep(ms) {
-                return new Promise(resolve => setTimeout(resolve, ms));
-            }
+        document.body.innerHTML = data + `<div class="main">` + htmlData + `</div>`;
+        document.body.style.color = "white";
+
+        let doc = new DOMParser().parseFromString(htmlData, 'text/html').getElementsByTagName('script');
+            
+        for (doc of doc) {
+            eval(doc.innerHTML);
+        }
+    }
+
+    async function loadTitle() {
+        function sleep(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
     
-            while (true) {
-                document.getElementById("editorTitle").innerHTML = document.title;
-                await sleep(50);
-            }
+        while (true) {
+            document.getElementById("editorTitle").innerHTML = document.title;
+            await sleep(50);
         }
+    }
 
     themes = await loadThemes();
 
