@@ -1,6 +1,7 @@
 document.addEventListener("DOMContentLoaded", function() {
     async function main() {
         async function loadInit() {
+            document.body.style.backgroundColor = "#344b4b";
             const fs = require("fs");
 
             const data = fs.readFileSync(__dirname + "/base.html", {encoding:'utf8', flag:'r'});
