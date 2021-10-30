@@ -21,3 +21,23 @@
     width: calc(100% - 50px);
     z-index: 10;
 }
+
+.fileMenu {
+    position: absolute;
+    background-color: var(--secondary-background);
+    height: 30px;
+    width: 100%;
+}
+
+.noFile {
+    position: absolute;
+    top: 30px;
+}
+
+.backgroundImage {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    /* bring your own prefixes */
+    transform: translate(-50%, -50%);
+ }
