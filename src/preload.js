@@ -48,11 +48,11 @@ document.addEventListener("DOMContentLoaded", function() {
             } else {
                htmlData = document.body.innerHTML;
             }
-            
+
             document.body.innerHTML = data + `<div class="main">` + htmlData + `</div>`;
 
             var doc = new DOMParser().parseFromString(htmlData, 'text/html').getElementsByTagName('script');
-            otherData = htmlData;
+            
             for (doc of doc) {
                 eval(doc.innerHTML)
             }
