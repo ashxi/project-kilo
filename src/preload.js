@@ -64,6 +64,7 @@ document.addEventListener("DOMContentLoaded", async function() {
         }
 
         document.body.innerHTML = data + `<div id="mainWindow" class="main"></div>`;
+        document.body.style.backgroundColor = "#2a3c3c";
         document.body.style.color = "white";
 
         brew.location.replaceHTML(htmlData);

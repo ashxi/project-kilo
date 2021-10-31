@@ -23,7 +23,6 @@ p {
 /* Styling of window frame and titlebar */
 body {
   border: 1px solid #48545c;
-  overflow-y: hidden;
 }
 
 #titlebar {
@@ -195,11 +194,11 @@ a:link, a:visited, a:hover, a:active {
 
 .main {
   position: absolute;
+  border-radius: 10px 0px 0px 0px;
   left: 0px;
   background-color: var(--bg-color);
   top: var(--titlebar-height);
   left: var(--sidebar-length);
-  height: calc(100%);
   width: calc(100% - 50px);
   z-index: 10;
 }
