@@ -1,5 +1,6 @@
-const brew = { location: {
-    replaceHTML: function(data) {
+exports.brew = { 
+    location: {
+      replaceHTML: function(data) {
         document.getElementById("mainWindow").innerHTML = data;
         
         const html = new DOMParser().parseFromString(data, 'text/html');
@@ -33,5 +34,3 @@ const brew = { location: {
       brewVer: JSON.parse(JSON.stringify(require("../package.json")))["version"]
   }
 };
-
-exports.brew = brew;
