@@ -22,6 +22,7 @@ p {
 
 /* Styling of window frame and titlebar */
 body {
+  overflow: hidden;
   border: 1px solid #48545c;
 }
 
@@ -196,11 +197,13 @@ a:link, a:visited, a:hover, a:active {
   position: absolute;
   border-radius: 10px 0px 0px 0px;
   left: 0px;
+  height: calc(100% - 10px);
   background-color: var(--bg-color);
   top: var(--titlebar-height);
   left: var(--sidebar-length);
   width: calc(100% - 50px);
   z-index: 10;
+  overflow-y: auto;
 }
 
 .fileMenu {

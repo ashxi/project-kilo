@@ -1,6 +1,10 @@
-exports.brew = { 
+const fs = require("fs");
+
+const brew = { 
     location: {
-      replaceHTML: function(data) {
+      replaceHTML: function(origData) {
+        let data = origData;
+        data = data.replaceAll("<patchRenderer></patchRenderer>", "<br><br>")
         document.getElementById("mainWindow").innerHTML = data;
         
         const html = new DOMParser().parseFromString(data, 'text/html');
@@ -33,4 +37,6 @@ exports.brew = {
       },
       brewVer: JSON.parse(JSON.stringify(require("../package.json")))["version"]
   }
-};
+}
+
+exports.brew = brew;
