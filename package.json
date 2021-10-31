@@ -1,7 +1,7 @@
 {
-  "name": "project-kilo",
-  "version": "1.0.0",
-  "description": "A malleable yet a powerful and strong IDE, written in Electron.\r ## What are you inspired by?\r We are inspired by doom emacs, 4coder, dion, and a random image of randy in the video \"inverse kinematics\".",
+  "name": "bedrock",
+  "version": "0.1.0",
+  "description": "A malleable yet a powerful and strong IDE, written in Electron.",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",

@@ -30,7 +30,7 @@ const brew = { location: {
           console.log(`Running Brew ${brew.homebrew.brewVer}, by Bedrock Team.`);
           return(true);
       },
-      brewVer: "0.1a"
+      brewVer: JSON.parse(JSON.stringify(require("../package.json")))["version"]
   }
 };
 
