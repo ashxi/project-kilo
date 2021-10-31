@@ -1,7 +1,9 @@
-const fs = require("fs");
-const { contextBridge } = require("electron")
-const brew = require("./brewAPI.js").brew;
+const fs = require("fs"), 
+    { contextBridge, ipcRenderer } = require("electron"),
+    brew = require("./brewAPI.js").brew;
 contextBridge.exposeInMainWorld("brew", brew);
+
+//ipcRenderer.send('selectDirectory');
 
 async function loadThemes() {
     let themes = [];
