@@ -4,7 +4,7 @@ const brew = {
     location: {
       replaceHTML: function(origData) {
         let data = origData;
-        data = data.replaceAll("<patchRenderer></patchRenderer>", "<br><br>")
+        data += "<br><br>";
         document.getElementById("mainWindow").innerHTML = data;
         
         const html = new DOMParser().parseFromString(data, 'text/html');
