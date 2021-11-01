@@ -23,7 +23,6 @@ function createWindow () {
     mainWindow.on('closed', () => {
         mainWindow = null;
     });
-
     
     const menu = new Menu();
 
@@ -35,8 +34,6 @@ function createWindow () {
             click: () => {
                 mainWindow.webContents.send('reload', 'reloadWindow')
             }
-        }, {
-
         }, {
             label: "Refresh Renderer",
             accelerator: "Ctrl+Shift+R",
