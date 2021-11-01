@@ -1,4 +1,4 @@
-const {app, BrowserWindow, ipcMain, dialog} = require('electron');
+const {app, BrowserWindow, ipcMain, ipcRenderer, dialog, Menu, MenuItem} = require('electron');
 
 let mainWindow;
 
@@ -23,6 +23,37 @@ function createWindow () {
     mainWindow.on('closed', () => {
         mainWindow = null;
     });
+
+    
+    const menu = new Menu();
+
+    menu.append(new MenuItem({
+        label: 'Bedrock',
+        submenu: [{
+            label: 'Reload',
+            accelerator: "Ctrl+R",
+            click: () => {
+                mainWindow.webContents.send('reload', 'reloadWindow')
+            }
+        }, {
+
+        }, {
+            label: "Refresh Renderer",
+            accelerator: "Ctrl+Shift+R",
+            click: () => {
+                mainWindow.webContents.send('refresh', 'reloadRenderer')
+            }
+        }, {
+            label: 'Quit',
+            accelerator: "Ctrl+Q",
+            click: () => {
+                app.quit();
+            }
+        }]
+    }))
+
+    Menu.setApplicationMenu(menu);
+
 }
 
 app.on('ready', createWindow);

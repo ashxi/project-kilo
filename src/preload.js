@@ -45,6 +45,19 @@ document.addEventListener("DOMContentLoaded", async function() {
     document.body.style.color = "#344b4b";
 
     let themes = [];
+
+    async function loadKeybindings() {
+        const {ipcMain, ipcRenderer} = require('electron')
+
+        ipcRenderer.on('reload', (event, arg) => {
+            brew.location.reload();
+         })
+
+         ipcRenderer.on('refresh', (event, arg) => {
+            window.location.reload();
+         })
+    }
+    
     async function loadInit() {
         const data = fs.readFileSync(__dirname + "/base.html", {encoding:'utf8', flag:'r'});
 
@@ -85,7 +98,6 @@ document.addEventListener("DOMContentLoaded", async function() {
 
     await loadInit();
     await require("./renderer.js");
-    await loadTitle();
-
-    main();
+    loadTitle();
+    await loadKeybindings();
 }) 
