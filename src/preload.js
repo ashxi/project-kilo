@@ -52,7 +52,7 @@ document.addEventListener("DOMContentLoaded", async function() {
     let themes = [];
 
     async function loadKeybindings() {
-        const {ipcMain, ipcRenderer} = require('electron')
+        const {ipcRenderer} = require('electron')
 
         ipcRenderer.on('reload', (event, arg) => {
             brew.location.reload();
