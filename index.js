@@ -20,8 +20,7 @@ function createWindow () {
                 }
                 await fs.promises.writeFile('./config.json', builtString);
 
-                let magic = fs.readFileSync("./config.json");
-                windowInfo = JSON.parse(magic);
+                windowInfo = JSON.parse(builtString);
             } catch (e) {
                 console.warn(e);
             }
