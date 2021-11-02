@@ -1,5 +1,6 @@
 const {app, BrowserWindow, ipcMain, ipcRenderer, dialog, Menu, MenuItem} = require('electron');
 
+process.env.ELECTRON_DISABLE_SECURITY_WARNINGS = true
 let mainWindow;
 
 function createWindow () {
@@ -45,6 +46,12 @@ function createWindow () {
             accelerator: "Ctrl+Q",
             click: () => {
                 app.quit();
+            }
+        }, {
+            label: 'Toggle DevTools',
+            accelerator: "Ctrl+Shift+I",
+            click: () => {
+                mainWindow.webContents.toggleDevTools();
             }
         }]
     }))

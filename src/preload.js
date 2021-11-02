@@ -1,7 +1,12 @@
 const fs = require("fs"), 
     { contextBridge, ipcRenderer } = require("electron"),
     brew = require("./brewAPI.js").brew;
-contextBridge.exposeInMainWorld("brew", brew);
+
+try {
+    contextBridge.exposeInMainWorld("brew", brew);
+} catch (e) {
+    console.warn(`Failed to expose Brew API! This may result in some features not working!\n${e}`);
+}
 
 //ipcRenderer.send('selectDirectory');
 
