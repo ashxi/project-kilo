@@ -62,9 +62,7 @@ document.addEventListener("DOMContentLoaded", async function() {
         const data = fs.readFileSync(__dirname + "/base.html", {encoding:'utf8', flag:'r'});
 
         let htmlData = "";
-        let themePath = "",
-            fontPath = "",
-            windowiconsPath = "";
+        let paths = []; //0 = themes, 1=fonts, 2=windowicons
             
         if (localStorage.getItem("initalSetup") != true) {
             localStorage.setItem("theme", "default");
