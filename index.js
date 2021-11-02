@@ -1,4 +1,4 @@
-const {app, BrowserWindow, ipcMain, dialog, Menu, MenuItem} = require('electron'),
+const {app, BrowserWindow, ipcMain, dialog, Menu, MenuItem, screen} = require('electron'),
       fs = require('fs');
 
 let mainWindow,
@@ -27,7 +27,7 @@ function createWindow () {
         windowInfo = JSON.parse(magic);
     } catch (err) {
         try {
-            let loadedJSON = `{\n  "width": 800,\n  "height": 600,\n  "x": 0,\n  "y": 0,\n  "isMaximized": false,\n  "isDevMode": true\n}`;
+            let loadedJSON = `{\n  "width": 800,\n  "height": 600,\n  "x": null,\n  "y": null,\n  "isMaximized": false,\n  "isDevMode": true\n}`;
             fs.writeFileSync("./config.json", loadedJSON);
             windowInfo = JSON.parse(loadedJSON);
         } catch (e) {
@@ -35,20 +35,35 @@ function createWindow () {
         }
     }
 
-    mainWindow = new BrowserWindow({
-        width: windowInfo.width,
-        height: windowInfo.height,
-        x: windowInfo.x,
-        y: windowInfo.y,
-        frame: false,
-        backgroundColor: '#FFF',
-        title: "Bedrock",
-        webPreferences: {
-            nodeIntegration: true,
-            enableRemoteModule: true,
-            preload: __dirname + "/src/preload.js"
-        } 
-    });
+    if (windowInfo.x == null || windowInfo.y == null) {
+        mainWindow = new BrowserWindow({
+            width: windowInfo.width,
+            height: windowInfo.height,
+            frame: false,
+            backgroundColor: '#FFF',
+            title: "Bedrock",
+            webPreferences: {
+                nodeIntegration: true,
+                enableRemoteModule: true,
+                preload: __dirname + "/src/preload.js"
+            } 
+        });
+    } else {
+        mainWindow = new BrowserWindow({
+            width: windowInfo.width,
+            height: windowInfo.height,
+            x: windowInfo.x,
+            y: windowInfo.y,
+            frame: false,
+            backgroundColor: '#FFF',
+            title: "Bedrock",
+            webPreferences: {
+                nodeIntegration: true,
+                enableRemoteModule: true,
+                preload: __dirname + "/src/preload.js"
+            } 
+        });
+    }
 
     if (windowInfo.isMaximized) {
         mainWindow.maximize();
