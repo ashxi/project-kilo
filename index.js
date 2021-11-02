@@ -1,14 +1,48 @@
-const {app, BrowserWindow, ipcMain, ipcRenderer, dialog, Menu, MenuItem} = require('electron');
+const {app, BrowserWindow, ipcMain, dialog, Menu, MenuItem} = require('electron'),
+      fs = require('fs');
 
-process.env.ELECTRON_DISABLE_SECURITY_WARNINGS = true
-let mainWindow;
+let mainWindow,
+    windowInfo;
 
 function createWindow () {
+    async function autoUpdate() {
+        function sleep(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+
+        while (true) {
+            try {
+                let builtString = `{\n  "width": ${mainWindow.getSize()[0]},\n  "height": ${mainWindow.getSize()[1]},\n  "x": ${mainWindow.getPosition()[0]},\n  "y": ${mainWindow.getPosition()[1]},\n  "isMaximized": ${mainWindow.isMaximized()},\n  "isDevMode": true\n}`;
+                await fs.promises.writeFile('./config.json', builtString);
+            } catch (e) {
+                console.warn(e);
+            }
+
+            await sleep(2500);
+        }
+    }
+
+    try {
+        let magic = fs.readFileSync("./config.json");
+        windowInfo = JSON.parse(magic);
+    } catch (err) {
+        try {
+            let loadedJSON = `{\n  "width": 800,\n  "height": 600,\n  "x": 0,\n  "y": 0,\n  "isMaximized": false,\n  "isDevMode": true\n}`;
+            fs.writeFileSync("./config.json", loadedJSON);
+            windowInfo = JSON.parse(loadedJSON);
+        } catch (e) {
+            console.error(`There were 2 errors loading the configuration! ${err}; ${e}`);   
+        }
+    }
+
     mainWindow = new BrowserWindow({
-        width: 800,
-        height: 600,
+        width: windowInfo.width,
+        height: windowInfo.height,
+        x: windowInfo.x,
+        y: windowInfo.y,
         frame: false,
         backgroundColor: '#FFF',
+        title: "Bedrock",
         webPreferences: {
             nodeIntegration: true,
             enableRemoteModule: true,
@@ -16,48 +50,54 @@ function createWindow () {
         } 
     });
 
+    if (windowInfo.isMaximized) {
+        mainWindow.maximize();
+    }
+
     require('@electron/remote/main').initialize();
     require("@electron/remote/main").enable(mainWindow.webContents)
 
     mainWindow.loadFile('./src/index.html');
-
-    mainWindow.on('closed', () => {
-        mainWindow = null;
-    });
     
     const menu = new Menu();
+    let menuSub = [{
+        label: 'Reload',
+        accelerator: "Ctrl+R",
+        click: () => {
+            mainWindow.webContents.send('reload', 'reloadWindow')
+        }
+    }, {
+        label: "Refresh Renderer",
+        accelerator: "Ctrl+Shift+R",
+        click: () => {
+            mainWindow.webContents.send('refresh', 'reloadRenderer')
+        }
+    }, {
+        label: 'Quit',
+        accelerator: "Ctrl+Q",
+        click: () => {
+            app.quit();
+        }
+    }];
+
+    if (windowInfo.isDevMode) {
+        menuSub.push({
+            label: 'Dev Tools',
+            accelerator: "Ctrl+Shift+I",
+            click: () => {
+                mainWindow.webContents.openDevTools();
+            }
+        });
+    }
 
     menu.append(new MenuItem({
         label: 'Bedrock',
-        submenu: [{
-            label: 'Reload',
-            accelerator: "Ctrl+R",
-            click: () => {
-                mainWindow.webContents.send('reload', 'reloadWindow')
-            }
-        }, {
-            label: "Refresh Renderer",
-            accelerator: "Ctrl+Shift+R",
-            click: () => {
-                mainWindow.webContents.send('refresh', 'reloadRenderer')
-            }
-        }, {
-            label: 'Quit',
-            accelerator: "Ctrl+Q",
-            click: () => {
-                app.quit();
-            }
-        }, {
-            label: 'Toggle DevTools',
-            accelerator: "Ctrl+Shift+I",
-            click: () => {
-                mainWindow.webContents.toggleDevTools();
-            }
-        }]
-    }))
-
+        submenu: menuSub
+    }));
+    
     Menu.setApplicationMenu(menu);
 
+    mainWindow.webContents.once('dom-ready', () => {autoUpdate()});
 }
 
 app.on('ready', createWindow);
@@ -65,12 +105,6 @@ app.on('ready', createWindow);
 app.on('window-all-closed', function () {
     if (process.platform !== 'darwin') {
         app.quit();
-    }
-});
-
-app.on('activate', function () {
-    if (mainWindow === null) {
-        createWindow();
     }
 });
 
