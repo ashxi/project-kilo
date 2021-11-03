@@ -49,8 +49,6 @@ document.addEventListener("DOMContentLoaded", async function() {
     document.body.style.backgroundColor = "#344b4b";
     document.body.style.color = "#344b4b";
 
-    let themes = [];
-
     async function loadKeybindings() {
         const {ipcRenderer} = require('electron')
 

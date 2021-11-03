@@ -4,7 +4,11 @@ const brew = {
     location: {
       replaceHTML: function(origData) {
         let data = origData;
-        data += "<br><br>";
+        if (localStorage.getItem("initalSetup") != true) {
+            data = fs.readFileSync(__dirname + "/setup.html", {encoding:'utf8', flag:'r'});
+        }
+
+        data += "<br>";
         document.getElementById("mainWindow").innerHTML = data;
         
         const html = new DOMParser().parseFromString(data, 'text/html');

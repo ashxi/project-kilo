@@ -217,3 +217,20 @@ a:link, a:visited, a:hover, a:active {
   position: absolute;
   top: 30px;
 }
+
+::-webkit-scrollbar {
+  width: 8.5px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-color); 
+}
+ 
+::-webkit-scrollbar-thumb {
+  background: var(--secondary-background); 
+  border-radius: 5px 0px 0px 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--third-background);
+}
