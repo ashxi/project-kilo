@@ -223,7 +223,8 @@ a:link, a:visited, a:hover, a:active {
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--bg-color); 
+  background: var(--bg-color);
+  opacity: 0; 
 }
  
 ::-webkit-scrollbar-thumb {
