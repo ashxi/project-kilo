@@ -1,4 +1,4 @@
-const {app, BrowserWindow, ipcMain, dialog, Menu, MenuItem } = require('electron'),
+const { app, BrowserWindow, ipcMain, dialog, Menu, MenuItem } = require('electron'),
       fs = require('fs');
 
 let mainWindow,
