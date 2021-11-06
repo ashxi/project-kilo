@@ -84,7 +84,6 @@ document.addEventListener("DOMContentLoaded", async function() {
         }
 
         for (themeJSON of themes) {
-            console.log(themeJSON)
               if (themeJSON.type == "theme") {
                   if (themeJSON.shortname == localStorage.getItem("theme")) {
                       console.log(themeJSON.path);
