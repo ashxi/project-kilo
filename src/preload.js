@@ -31,9 +31,10 @@ async function loadThemes() {
                 temp.license = path.join(subdirectories, temp.license);
 
                 if (temp.type == "theme") {
-                    temp.path = path.join(subdirectories, temp.license);
+
+                    temp.path = path.join(subdirectories, temp.path);
                 } else if (temp.type == "windowicons") {
-                    temp.path = path.join(subdirectories);
+                    temp.path = subdirectories;
                 } else if (temp.type == "font") {
                     temp.regular = path.join(subdirectories, temp.regular);
                 }
@@ -48,6 +49,8 @@ async function loadThemes() {
 document.addEventListener("DOMContentLoaded", async function() {
     document.body.style.backgroundColor = "#344b4b";
     document.body.style.color = "#344b4b";
+
+    let themes;
 
     async function loadKeybindings() {
         const {ipcRenderer} = require('electron')
@@ -65,7 +68,10 @@ document.addEventListener("DOMContentLoaded", async function() {
         const data = fs.readFileSync(__dirname + "/base.html", {encoding:'utf8', flag:'r'});
 
         let htmlData = "";
-        let paths = []; //0 = themes, 1=fonts, 2=windowicons
+
+        // 0 = themes, 1=fonts, 2=windowicons
+        let defaults = ["", "", ""];
+        let paths = ["", "", ""]; 
             
         if (localStorage.getItem("initalSetup") != true) {
             localStorage.setItem("theme", "default");
@@ -77,7 +83,51 @@ document.addEventListener("DOMContentLoaded", async function() {
             htmlData = document.body.innerHTML;
         }
 
-        document.body.innerHTML = data + `<div id="mainWindow" class="main"></div>`;
+        for (themeJSON of themes) {
+            console.log(themeJSON)
+              if (themeJSON.type == "theme") {
+                  if (themeJSON.shortname == localStorage.getItem("theme")) {
+                      console.log(themeJSON.path);
+                      paths[0] = themeJSON.path;
+                  }
+
+                  if (themeJSON.shortname == "default") {
+                      defaults[0] = themeJSON.path;
+                  }
+              } else if (themeJSON.type == "font") {
+                  if (themeJSON.shortname == localStorage.getItem("font")) {
+                      paths[1] = themeJSON.regular;
+                  }
+
+                if (themeJSON.shortname == "fira-code") {
+                    defaults[1] = themeJSON.regular;
+                }
+            } else if (themeJSON.type == "windowicons") {
+                if (themeJSON.shortname == localStorage.getItem("windowicons")) {
+                    paths[2] = themeJSON.path;
+                }
+
+                if (themeJSON.shortname == "vscode-fluent-icons") {
+                    defaults[2] = themeJSON.path;
+                }
+            }
+        }
+
+        if (paths[0] == "") {
+            paths[0] = defaults[0];
+        } else if (paths[1] == "") {
+            paths[1] = defaults[1];
+        } else if (paths[2] == "") {
+            paths[2] = defaults[2];
+        }
+
+        console.log(paths, defaults)
+
+        let theme = await fs.readFileSync(paths[0], {encoding:'utf8', flag:'r'});
+        let font = await fs.readFileSync(paths[1], {encoding:'utf8', flag:'r'});
+        let windowicons = paths[2];
+
+        document.body.innerHTML = `${data}<style>${theme}</style><div id="mainWindow" class="main"></div>`;
         document.body.style.backgroundColor = "#2a3c3c";
         document.body.style.color = "white";
 
