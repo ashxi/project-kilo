@@ -1,6 +1,5 @@
 const fs = require("fs"), 
     { contextBridge, ipcRenderer } = require("electron"),
-    hljs = require("highlight.js"),
     brew = require("./brewAPI.js").brew;
 
 try {

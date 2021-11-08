@@ -1,7 +1,25 @@
 const fs = require("fs"),
       hljs = require("highlight.js");
 
-const setupOverride = true;
+const setupOverride = false;
+
+async function lazyLoad(data) {
+    const html = new DOMParser().parseFromString(data, 'text/html');
+    let doc = html.getElementsByTagName('script');
+    let title = html.getElementsByTagName('title');
+
+    for (docs of doc) {
+        eval(docs.innerHTML);
+    }
+
+    for (newTitle of title) {
+        document.title = newTitle.innerHTML;
+    }
+
+    for (coding of document.getElementsByClassName('code')) {
+        coding.innerHTML = hljs.highlightAuto(coding.innerHTML).value;  
+    }
+}
 
 const brew = { 
     location: {
@@ -13,22 +31,8 @@ const brew = {
 
         data += "<br>";
         document.getElementById("mainWindow").innerHTML = data;
-        
-        for (coding of document.getElementsByClassName('code')) {
-            coding.innerHTML = hljs.highlightAuto(coding.innerHTML).value;  
-        }
-        
-        const html = new DOMParser().parseFromString(data, 'text/html');
-        let doc = html.getElementsByTagName('script');
-        let title = html.getElementsByTagName('title');
-            
-        for (docs of doc) {
-            eval(docs.innerHTML);
-        }
 
-        for (newTitle of title) {
-            document.title = newTitle.innerHTML;
-        }
+        lazyLoad(data);
     },
     replace: function(url) {
         const data = fs.readFileSync(`${__dirname}/${url}`, {encoding:'utf8', flag:'r'});
