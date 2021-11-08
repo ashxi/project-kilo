@@ -86,7 +86,6 @@ document.addEventListener("DOMContentLoaded", async function() {
         for (themeJSON of themes) {
               if (themeJSON.type == "theme") {
                   if (themeJSON.shortname == localStorage.getItem("theme")) {
-                      console.log(themeJSON.path);
                       paths[0] = themeJSON.path;
                   }
 
@@ -119,8 +118,6 @@ document.addEventListener("DOMContentLoaded", async function() {
         } else if (paths[2] == "") {
             paths[2] = defaults[2];
         }
-
-        console.log(paths, defaults)
 
         let theme = await fs.readFileSync(paths[0], {encoding:'utf8', flag:'r'});
         let font = await fs.readFileSync(paths[1], {encoding:'utf8', flag:'r'});
