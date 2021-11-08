@@ -1,3 +1,14 @@
+/* Variables */
+
+:root {
+  /* Not a variable but this disables selection. */
+  user-select: none;
+  /* For looks in the main window. */
+  --sidebar-length: 50px;
+  --titlebar-height: 32px;
+}
+
+/* Themeing */
 * {margin: 0; padding: 0; border: 0; vertical-align: baseline;}
 html {box-sizing: border-box;}
 *, *:before, *:after {box-sizing: inherit;}
