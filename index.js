@@ -65,6 +65,7 @@ function createWindow () {
             frame: false,
             backgroundColor: '#FFF',
             title: "Bedrock",
+            icon: __dirname + "/src/logo.png",
             webPreferences: {
                 nodeIntegration: true,
                 enableRemoteModule: true,
