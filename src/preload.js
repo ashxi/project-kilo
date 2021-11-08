@@ -1,5 +1,6 @@
 const fs = require("fs"), 
     { contextBridge, ipcRenderer } = require("electron"),
+    hljs = require("highlight.js"),
     brew = require("./brewAPI.js").brew;
 
 try {
@@ -122,6 +123,8 @@ document.addEventListener("DOMContentLoaded", async function() {
         let theme = await fs.readFileSync(paths[0], {encoding:'utf8', flag:'r'});
         let font = await fs.readFileSync(paths[1], {encoding:'utf8', flag:'r'});
         let windowicons = paths[2];
+
+        
 
         document.body.innerHTML = `${data}<style>${theme}</style><div id="mainWindow" class="main"></div>`;
         document.body.style.backgroundColor = "#2a3c3c";

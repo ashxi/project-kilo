@@ -1,9 +1,26 @@
-/* This is the default theme. */
+/* 
+  Bedrock's default theme.
+  Copyright (c) 2021, Bedrock Team. All rights reserved.
+  Licensed under MIT.
+*/
 
 :root {
+    /* UI Information */
     --bg-color: #344b4b;
     --secondary-background: #2a3c3c;
     --third-background: #1f2d2d;
     --highlighted-color: #f7c678;
+    /* For glorious syntax highlighting */
     --white: #fdf4ed;
+    --mono-1:  #abb2bf;
+    --mono-2:  #818896;
+    --mono-3:  #5c6370;
+    --hue-1:   #56b6c2;
+    --hue-2:   #61aeee;
+    --hue-3:   #c678dd;
+    --hue-4:   #98c379;
+    --hue-5:   #e06c75;
+    --hue-5-2: #be5046;
+    --hue-6:   #d19a66;
+    --hue-6-2: #e6c07b;
 }

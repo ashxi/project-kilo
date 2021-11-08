@@ -1,15 +1,22 @@
-const fs = require("fs");
+const fs = require("fs"),
+      hljs = require("highlight.js");
+
+const setupOverride = true;
 
 const brew = { 
     location: {
       replaceHTML: function(origData) {
         let data = origData;
-        if (localStorage.getItem("initalSetup") != true) {
+        if (localStorage.getItem("initalSetup") != true && !setupOverride) {
             data = fs.readFileSync(__dirname + "/setup.html", {encoding:'utf8', flag:'r'});
         }
 
         data += "<br>";
         document.getElementById("mainWindow").innerHTML = data;
+        
+        for (coding of document.getElementsByClassName('code')) {
+            coding.innerHTML = hljs.highlightAuto(coding.innerHTML).value;  
+        }
         
         const html = new DOMParser().parseFromString(data, 'text/html');
         let doc = html.getElementsByTagName('script');
