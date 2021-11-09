@@ -17,7 +17,9 @@ async function lazyLoad(data) {
     }
 
     for (coding of document.getElementsByClassName('code')) {
-        coding.innerHTML = hljs.highlightAuto(coding.innerHTML).value;  
+        let temp = hljs.highlightAuto(coding.innerHTML).value;
+        console.log(temp);
+        coding.innerHTML = temp;  
     }
 }
 
