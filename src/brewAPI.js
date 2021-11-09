@@ -3,29 +3,29 @@ const fs = require("fs"),
 
 const setupOverride = false;
 
-async function lazyLoad(data) {
-    const html = new DOMParser().parseFromString(data, 'text/html');
-    let doc = html.getElementsByTagName('script');
-    let title = html.getElementsByTagName('title');
-
-    for (docs of doc) {
-        eval(docs.innerHTML);
-    }
-
-    for (newTitle of title) {
-        document.title = newTitle.innerHTML;
-    }
-
-    for (coding of document.getElementsByClassName('code')) {
-        let temp = hljs.highlightAuto(coding.innerHTML).value;
-        console.log(temp);
-        coding.innerHTML = temp;  
-    }
-}
-
 const brew = { 
     location: {
       replaceHTML: function(origData) {
+        async function lazyLoad(data) {
+            const html = new DOMParser().parseFromString(data, 'text/html');
+            let doc = html.getElementsByTagName('script');
+            let title = html.getElementsByTagName('title');
+
+            for (docs of doc) {
+                eval(docs.innerHTML);
+            }
+
+            for (newTitle of title) {
+                document.title = newTitle.innerHTML;
+            }
+
+            for (coding of document.getElementsByClassName('code')) {
+                let temp = hljs.highlightAuto(coding.innerHTML).value;
+                console.log(temp);
+                coding.innerHTML = temp;  
+            }
+        }
+        
         let data = origData;
         if (localStorage.getItem("initalSetup") != true && !setupOverride) {
             data = fs.readFileSync(__dirname + "/setup.html", {encoding:'utf8', flag:'r'});
