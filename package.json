@@ -1,5 +1,5 @@
 {
-  "name": "bedrock",
+  "name": "concrete",
   "version": "0.1.0",
   "description": "A malleable yet a powerful and strong IDE, written in Electron.",
   "main": "index.js",
