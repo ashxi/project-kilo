@@ -31,7 +31,6 @@ async function loadThemes() {
                 temp.license = path.join(subdirectories, temp.license);
 
                 if (temp.type == "theme") {
-
                     temp.path = path.join(subdirectories, temp.path);
                 } else if (temp.type == "windowicons") {
                     temp.path = subdirectories;
@@ -51,6 +50,10 @@ document.addEventListener("DOMContentLoaded", async function() {
     document.body.style.color = "#344b4b";
 
     let themes;
+
+    function sleep(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
+    }
 
     async function loadKeybindings() {
         const {ipcRenderer} = require('electron')
@@ -93,12 +96,14 @@ document.addEventListener("DOMContentLoaded", async function() {
                       defaults[0] = themeJSON.path;
                   }
               } else if (themeJSON.type == "font") {
-                  if (themeJSON.shortname == localStorage.getItem("font")) {
-                      paths[1] = themeJSON.regular;
-                  }
+                const path = require("path");
+
+                if (themeJSON.shortname == localStorage.getItem("font")) {
+                    paths[1] = path.relative(__dirname, themeJSON.regular);
+                }
 
                 if (themeJSON.shortname == "fira-code") {
-                    defaults[1] = themeJSON.regular;
+                    defaults[1] = [path.relative(__dirname, themeJSON.regular), themeJSON.installedname];
                 }
             } else if (themeJSON.type == "windowicons") {
                 if (themeJSON.shortname == localStorage.getItem("windowicons")) {
@@ -120,23 +125,28 @@ document.addEventListener("DOMContentLoaded", async function() {
         }
 
         let theme = await fs.readFileSync(paths[0], {encoding:'utf8', flag:'r'});
-        let font = await fs.readFileSync(paths[1], {encoding:'utf8', flag:'r'});
+
+        let patchAll = paths[1].replaceAll("\\", "/").replaceAll(" ", "\ ");
+        let font = new FontFace(`codeDefault`, `url("${patchAll}")`);
+
+        font.load(font).then(function(loadedFont) {
+            document.fonts.add(loadedFont);
+        });
+
         let windowicons = paths[2];
 
-        
-
         document.body.innerHTML = `${data}<style>${theme}</style><div id="mainWindow" class="main"></div>`;
+
+        await sleep(10);
+
         document.body.style.backgroundColor = "#2a3c3c";
+        await sleep(10);
         document.body.style.color = "white";
 
         brew.location.replaceHTML(htmlData);
     }
 
     async function loadTitle() {
-        function sleep(ms) {
-            return new Promise(resolve => setTimeout(resolve, ms));
-        }
-    
         while (true) {
             document.getElementById("editorTitle").innerHTML = document.title;
             await sleep(50);

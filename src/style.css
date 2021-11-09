@@ -329,3 +329,17 @@ a:link, a:visited, a:hover, a:active {
 .hljs-link {
   text-decoration: underline;
 }
+
+/* Editor Background */
+
+.backgroundImage {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/* Load Monospace Font */
+.code {
+  font-family: "codeDefault";
+}

@@ -1,6 +1,7 @@
 {
     "name": "Default Font (Fira Code)",
     "shortname": "fira-code",
+    "installedname": "Fira Code",
     "license": "./license.txt",
     "regular": "./FiraCode-Regular.ttf",
     "type": "font"
