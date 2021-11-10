@@ -2,6 +2,8 @@ const fs = require("fs"),
     { contextBridge, ipcRenderer } = require("electron"),
     brew = require("./brewAPI.js").brew;
 
+localStorage.setItem('brewCache_hrefURL', null);
+
 try {
     contextBridge.exposeInMainWorld("brew", brew);
 } catch (e) {
@@ -55,11 +57,34 @@ document.addEventListener("DOMContentLoaded", async function() {
         return new Promise(resolve => setTimeout(resolve, ms));
     }
 
+    async function pppSetup() {
+        while (true) {
+            if (brew.location.href() == "setupStage2.html") {
+                if (!(document.getElementById("setup").innerHTML.includes("String sucessfully compiled."))) {
+                    let str = [];
+                
+                    for (themeJSON of themes) {
+                        let license = `--------Copyright information for ${themeJSON.name}\n\n` + fs.readFileSync(themeJSON.license).toString();
+    
+                        str.push(license);
+                    }
+    
+                    let htmlPatch = str.join("\n\n") + "\n\nConcrete: String sucessfully compiled, with 0 errors.";
+                    htmlPatch = htmlPatch.replaceAll("\n", "<br>");
+                    document.getElementById("setup").innerHTML = htmlPatch;
+                }
+            }
+            await sleep(2000);
+        }
+    }
+
     async function loadKeybindings() {
         const {ipcRenderer} = require('electron')
 
         ipcRenderer.on('reload', (event, arg) => {
-            brew.location.reload();
+            if (localStorage.getItem("initalSetup") == "true") {
+                brew.location.reload();
+            }
          })
 
          ipcRenderer.on('refresh', (event, arg) => {
@@ -76,7 +101,7 @@ document.addEventListener("DOMContentLoaded", async function() {
         let defaults = ["", "", ""];
         let paths = ["", "", ""]; 
             
-        if (localStorage.getItem("initalSetup") != true) {
+        if (localStorage.getItem("initialSetup") != "true") {
             localStorage.setItem("theme", "default");
             localStorage.setItem("font", "fira-code");
             localStorage.setItem("windowicons", "vscode-fluent-icons");
@@ -158,5 +183,6 @@ document.addEventListener("DOMContentLoaded", async function() {
     await loadInit();
     await require("./renderer.js");
     loadTitle();
+    pppSetup();
     await loadKeybindings();
 }) 

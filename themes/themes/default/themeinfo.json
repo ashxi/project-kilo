@@ -3,5 +3,6 @@
     "shortname": "default",
     "path": "./default.css",
     "license": "./license.txt",
+    "isPreinstalled": true,
     "type": "theme"
 }

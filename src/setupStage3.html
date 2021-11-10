@@ -1,15 +1,12 @@
-<!DOCTYPE html>
+<title>Concrete Setup</title>
 
 <div style="padding: 6px;">
     <h2>Concrete</h2>
     <h5>Powerful but malleable.</h5>
-    Welcome to Bedrock! This setup wizard will help you set up the Bedrock text editor.<br>
-    First, you need to agree to the license agreements.<br>
-    To start, click the "Next" button to continue.<br><br>
-    <button onclick="brew.location.replace('setupStage2.html')" class="pure-material-button-contained">Next</button>
+    You have reached the end of the setup.<br>
+    Happy coding!<br><br>
+    <button onclick="localStorage.setItem('initialSetup', 'true'); window.location.reload();" class="pure-material-button-contained">Finish</button>
 </div>
-
-<title>Concrete Setup</title>
 
 <style>
     .pure-material-button-contained {
