@@ -11,7 +11,7 @@ cp -R vscode-icons /tmp/maker/icons
 rm -rf vscode-icons
 echo [x] Installing required packages...
 echo [1/2] Installing Fira Code...
-unzip /tmp/maker/fira.zip -d /tmp/maker/fira
+yes A | unzip /tmp/maker/fira.zip -d /tmp/maker/fira
 mv /tmp/maker/fira/ttf/FiraCode-Regular.ttf "$PWD/../themes/fonts/Fira Code/FiraCode-Regular.ttf"
 echo [2/2] Installing VSCode Fluent Icons...
 cp -R /tmp/maker/icons/vscode-icons/icons/* $PWD/../themes/icons/vscode-fluent-icons/src
@@ -23,8 +23,7 @@ curl "https://raw.githubusercontent.com/vscode-icons/vscode-icons/master/LICENSE
 echo [x] Cleaning up...
 rm -rf /tmp/maker
 echo 1 > maker.done
-echo [x] Done! Starting app & installing other dependencies...
-cd ..
-npm install
-npm start
-exit
+echo [x] Done!
+echo You can finish setup by going back a directory,
+echo Running npm install,
+echo And npm start.
