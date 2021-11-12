@@ -51,6 +51,7 @@ function createWindow () {
             backgroundColor: '#FFF',
             title: "Bedrock",
             webPreferences: {
+                contextIsolation: true,
                 nodeIntegration: true,
                 enableRemoteModule: true,
                 preload: __dirname + "/src/preload.js"
@@ -67,6 +68,7 @@ function createWindow () {
             title: "Bedrock",
             icon: __dirname + "/src/logo.png",
             webPreferences: {
+                contextIsolation: true,
                 nodeIntegration: true,
                 enableRemoteModule: true,
                 preload: __dirname + "/src/preload.js"
