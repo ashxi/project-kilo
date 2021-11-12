@@ -2,6 +2,7 @@
     "name": "VSCode Fluent Icons",
     "shortname": "vscode-fluent-icons",
     "license": "./license.txt",
+    "path": "./src",
     "isPreinstalled": true,
     "type": "windowicons"
 }

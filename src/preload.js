@@ -35,7 +35,7 @@ async function loadThemes() {
                 if (temp.type == "theme") {
                     temp.path = path.join(subdirectories, temp.path);
                 } else if (temp.type == "windowicons") {
-                    temp.path = subdirectories;
+                    temp.path = path.join(subdirectories, temp.path);
                 } else if (temp.type == "font") {
                     temp.regular = path.join(subdirectories, temp.regular);
                 }
