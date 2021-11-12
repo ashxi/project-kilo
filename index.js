@@ -50,7 +50,7 @@ function createWindow () {
             height: windowInfo.height,
             hide: true,
             backgroundColor: '#FFF',
-            title: "Bedrock",
+            title: "Concrete",
             webPreferences: {
                 contextIsolation: true,
                 nodeIntegration: true,
@@ -66,7 +66,7 @@ function createWindow () {
             y: windowInfo.y,
             frame: false,
             backgroundColor: '#FFF',
-            title: "Bedrock",
+            title: "Concrete",
             icon: __dirname + "/src/logo.png",
             webPreferences: {
                 contextIsolation: true,
@@ -84,7 +84,7 @@ function createWindow () {
         height: 452,
         frame: false,
         backgroundColor: '#FFF',
-        title: "Bedrock is Loading...",
+        title: "Concrete is Loading...",
         icon: __dirname + "/src/logo.png",
         webPreferences: {
             contextIsolation: true,
@@ -136,7 +136,7 @@ function createWindow () {
     }
 
     menu.append(new MenuItem({
-        label: 'Bedrock',
+        label: 'Concrete',
         submenu: menuSub
     }));
     
