@@ -2,6 +2,7 @@ const { app, BrowserWindow, ipcMain, dialog, Menu, MenuItem } = require('electro
       fs = require('fs');
 
 let mainWindow,
+    loaderMain,
     windowInfo;
 
 function createWindow () {
@@ -47,7 +48,7 @@ function createWindow () {
         mainWindow = new BrowserWindow({
             width: windowInfo.width,
             height: windowInfo.height,
-            frame: false,
+            hide: true,
             backgroundColor: '#FFF',
             title: "Bedrock",
             webPreferences: {
@@ -75,6 +76,24 @@ function createWindow () {
             } 
         });
     }
+
+    mainWindow.hide();
+
+    loaderMain = new BrowserWindow({
+        width: 253,
+        height: 452,
+        frame: false,
+        backgroundColor: '#FFF',
+        title: "Bedrock is Loading...",
+        icon: __dirname + "/src/logo.png",
+        webPreferences: {
+            contextIsolation: true,
+            nodeIntegration: true,
+            enableRemoteModule: true,
+        } 
+    });
+
+    loaderMain.loadFile(__dirname + "/loader/loader.html");
 
     if (windowInfo.isMaximized) {
         mainWindow.maximize();
@@ -124,6 +143,11 @@ function createWindow () {
     Menu.setApplicationMenu(menu);
 
     mainWindow.webContents.once('dom-ready', () => {autoUpdate()});
+
+    ipcMain.on('ready', (event, arg) => {
+        loaderMain.close();
+        mainWindow.show();
+    })
 }
 
 app.on('ready', createWindow);

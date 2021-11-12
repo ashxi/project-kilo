@@ -184,5 +184,8 @@ document.addEventListener("DOMContentLoaded", async function() {
     await require("./renderer.js");
     loadTitle();
     pppSetup();
+
+    ipcRenderer.send('ready');
+
     await loadKeybindings();
 }) 
