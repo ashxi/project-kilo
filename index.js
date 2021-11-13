@@ -48,7 +48,7 @@ function createWindow () {
         mainWindow = new BrowserWindow({
             width: windowInfo.width,
             height: windowInfo.height,
-            hide: true,
+            frame: false,
             backgroundColor: '#FFF',
             title: "Concrete",
             webPreferences: {
