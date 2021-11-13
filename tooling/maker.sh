@@ -22,7 +22,7 @@ echo [2/2] Getting VSCode Icons...
 curl "https://raw.githubusercontent.com/vscode-icons/vscode-icons/master/LICENSE" > $PWD/../themes/icons/vscode-fluent-icons/license.txt
 echo [x] Cleaning up...
 rm -rf /tmp/maker
-echo 1 > maker.done
+printf 1 > maker.done
 echo [x] Done!
 echo You can finish setup by going back a directory,
 echo Running npm install,

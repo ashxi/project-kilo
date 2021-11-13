@@ -1,16 +1,16 @@
 const { app, BrowserWindow, ipcMain, dialog, Menu, MenuItem } = require('electron'),
       fs = require('fs');
 
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
 let mainWindow,
     loaderMain,
     windowInfo;
 
 function createWindow () {
     async function autoUpdate() {
-        function sleep(ms) {
-            return new Promise(resolve => setTimeout(resolve, ms));
-        }
-
         while (true) {
             try {
                 let builtString;
@@ -93,6 +93,8 @@ function createWindow () {
         } 
     });
 
+    loaderMain.hide();
+
     loaderMain.loadFile(__dirname + "/loader/loader.html");
 
     if (windowInfo.isMaximized) {
@@ -143,10 +145,16 @@ function createWindow () {
     Menu.setApplicationMenu(menu);
 
     mainWindow.webContents.once('dom-ready', () => {autoUpdate()});
+    loaderMain.webContents.once('dom-ready', () => {
+        loaderMain.show()
+    });
 
-    ipcMain.on('ready', (event, arg) => {
-        loaderMain.close();
-        mainWindow.show();
+    ipcMain.on('ready', async(event, arg) => {
+        try {
+            loaderMain.close();
+            await sleep(750);
+            mainWindow.show();
+        } catch (e) {}
     })
 }
 
