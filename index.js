@@ -177,3 +177,14 @@ ipcMain.on('selectDirectory', async function() {
         return(null);
     }
 });
+
+async function restart() {
+    console.log("Restarting...");
+    console.log("------THIS IS NOT A CRASH!------")
+    app.relaunch();
+    app.exit();
+}
+
+ipcMain.on('restart', async(event, arg) => {
+    restart();
+})

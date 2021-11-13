@@ -1,5 +1,6 @@
 const fs = require("fs"),
-      hljs = require("highlight.js");
+      hljs = require("highlight.js"),
+      { contextBridge, ipcRenderer } = require("electron");
 
 const override = false;
 
@@ -59,6 +60,9 @@ const brew = {
         let splitter = window.location.href.split("/");
     
         brew.location.replace(splitter[splitter.length - 1]);
+    },
+    restart: function() {
+        ipcRenderer.send("restart");
     },
     href: function() {
         let cache = localStorage.getItem("brewCache_hrefURL");
