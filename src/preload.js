@@ -48,9 +48,6 @@ async function loadThemes() {
 }
 
 document.addEventListener("DOMContentLoaded", async function() {
-    document.body.style.backgroundColor = "#344b4b";
-    document.body.style.color = "#344b4b";
-
     let themes;
 
     function sleep(ms) {
@@ -161,12 +158,6 @@ document.addEventListener("DOMContentLoaded", async function() {
         let windowicons = paths[2];
 
         document.body.innerHTML = `${data}<style>${theme}</style><div id="mainWindow" class="main"></div>`;
-
-        await sleep(10);
-
-        document.body.style.backgroundColor = "#2a3c3c";
-        await sleep(10);
-        document.body.style.color = "white";
 
         brew.location.replaceHTML(htmlData);
     }
