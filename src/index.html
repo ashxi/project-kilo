@@ -1,6 +1,35 @@
 <title>Concrete</title>
 
+<style>
+    .loader {
+        width: 150px;
+        height: 150px;
+        border-radius: 50%;
+        border: 10px solid #344b4b;
+        z-index: 1;
+    }
+
+    .mainText {
+        text-align: center;
+        z-index: 10;
+    }
+
+    .container {
+        position: fixed;
+        top: 165%;
+        left: 72%;
+        width: 100%;
+        height: 100%;
+        color: white;
+        transform: translate(-50%, -50%);
+    }
+</style>
+
 <div class="backgroundImage">
-    <h2>Concrete</h2>
-    Powerful but malleable.
+    <image class="loader" src="patchicon.png"></image>
+    <div class="container">
+        <h20 class="mainText">
+            <a href="test">New Project</a>
+        </h20>
+    </div>
 </div>

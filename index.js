@@ -146,7 +146,8 @@ function createWindow () {
 
     mainWindow.webContents.once('dom-ready', () => {autoUpdate()});
     loaderMain.webContents.once('dom-ready', () => {
-        loaderMain.show()
+        loaderMain.show();
+        loaderMain.focus();
     });
 
     ipcMain.on('ready', async(event, arg) => {
@@ -154,6 +155,7 @@ function createWindow () {
             loaderMain.close();
             await sleep(750);
             mainWindow.show();
+            mainWindow.focus();
         } catch (e) {}
     })
 }
