@@ -185,9 +185,14 @@ body {
 
 /* Make hyperlinks look better */
 
-a:link, a:visited, a:hover, a:active {
-  color: white;
-};
+a:link {
+  text-decoration:none;
+  color: var(--white-color);
+}
+
+a:hover {
+  color: var(--white-secondary-color);
+}
 
 /* Styling of sidebar */
 
@@ -218,22 +223,6 @@ a:link, a:visited, a:hover, a:active {
   z-index: 10;
   overflow-y: auto;
 }
-
-/* File menu (deprecated) */
-
-/*
-.fileMenu {
-  position: absolute;
-  background-color: var(--secondary-background);
-  height: 30px;
-  width: 100%;
-}
-
-.noFile {
-  position: absolute;
-  top: 30px;
-}
-*/
 
 /* Theme compliant scrollbar */
 

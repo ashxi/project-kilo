@@ -10,6 +10,9 @@
     --secondary-background: #2a3c3c;
     --third-background: #1f2d2d;
     --highlighted-color: #f7c678;
+    /* White Config */
+    --white-color: #ffffff;
+    --white-secondary-color: #f7f7f7d2;
     /* For glorious syntax highlighting */
     --white: #fdf4ed;
     --mono-1:  #abb2bf;
