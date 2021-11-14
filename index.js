@@ -168,18 +168,6 @@ app.on('window-all-closed', function () {
     }
 });
 
-ipcMain.on('selectDirectory', async function() {
-    const dir = await dialog.showOpenDialog(mainWindow, {
-        properties: ['openDirectory']
-    });
-    
-    if (!dir.canceled) {
-        return(dir.filePaths)
-    } else {
-        return(null);
-    }
-});
-
 async function restart() {
     console.log("Restarting...");
     console.log("------THIS IS NOT A CRASH!------")

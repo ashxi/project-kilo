@@ -1,6 +1,11 @@
 const fs = require("fs"),
       hljs = require("highlight.js"),
+      path = require("path"),
       { contextBridge, ipcRenderer } = require("electron");
+
+const remote = require('@electron/remote');
+const win = remote.getCurrentWindow();
+const dialog = remote.dialog;
 
 const override = false;
 
@@ -81,6 +86,51 @@ const brew = {
           return(true);
       },
       brewVer: JSON.parse(JSON.stringify(require("../package.json")))["version"]
+  },
+  pj: {
+      prompt: {
+          deps: {
+               folderPrompt: async function() {
+                  const dir = await dialog.showOpenDialog(win, {
+                      properties: ['openDirectory']
+                  });
+            
+                  if (!dir.canceled) {
+                      return(dir);
+                  } else {
+                      return(null);
+                  }
+               }
+          },
+          addProject: async function() {
+              let folders = await brew.pj.prompt.deps.folderPrompt();
+              let pathFolders = folders.filePaths[0];
+              let name = pathFolders.replaceAll("\\", "/").split("/").pop();
+
+              await brew.pj.add(name, pathFolders);
+              await localStorage.setItem("activeProject", name);
+              await brew.location.replace("project.html");
+          }
+      },
+      add: async function(name, path) {
+            let projects = [];
+            if (localStorage.getItem("projects") != null) {
+                projects = JSON.parse(localStorage.getItem("projects"));
+            } else {
+                projects = [];
+            }
+
+            let project = {
+                name: name,
+                path: path
+            }
+    
+            projects.push(project);
+            localStorage.setItem("projects", JSON.stringify(projects));
+      },
+      setActiveProject: function(name) {
+          localStorage.setItem("activeProject", name);
+      }
   }
 }
 

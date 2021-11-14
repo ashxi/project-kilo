@@ -10,8 +10,6 @@ try {
     console.warn(`Failed to expose Brew API! This may result in some features not working!\n${e}`);
 }
 
-//ipcRenderer.send('selectDirectory');
-
 async function loadThemes() {
     let themes = [];
 
