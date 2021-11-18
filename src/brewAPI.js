@@ -9,6 +9,26 @@ const dialog = remote.dialog;
 
 const override = false;
 
+async function lazyLoad(data) {
+    const html = new DOMParser().parseFromString(data, 'text/html');
+    let doc = html.getElementsByTagName('script');
+    let title = html.getElementsByTagName('title');
+
+    for (docs of doc) {
+        eval(docs.innerHTML);
+    }
+
+    for (newTitle of title) {
+        document.title = newTitle.innerHTML;
+    }
+
+    for (coding of document.getElementsByClassName('code')) {
+        let temp = hljs.highlightAuto(coding.innerHTML).value;
+        console.log(temp);
+        coding.innerHTML = temp;  
+    }
+}
+
 const brew = { 
     location: {
       replaceHTML: function(origData, ignore2) {
@@ -18,26 +38,6 @@ const brew = {
             setupOverride = true;
         } else {
             setupOverride = override;
-        }
-
-        async function lazyLoad(data) {
-            const html = new DOMParser().parseFromString(data, 'text/html');
-            let doc = html.getElementsByTagName('script');
-            let title = html.getElementsByTagName('title');
-
-            for (docs of doc) {
-                eval(docs.innerHTML);
-            }
-
-            for (newTitle of title) {
-                document.title = newTitle.innerHTML;
-            }
-
-            for (coding of document.getElementsByClassName('code')) {
-                let temp = hljs.highlightAuto(coding.innerHTML).value;
-                console.log(temp);
-                coding.innerHTML = temp;  
-            }
         }
 
         let data = origData;
