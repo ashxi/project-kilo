@@ -7,7 +7,7 @@ delete argvBefore;
 
 let isLinting = false, commit = "", type = "";
 if (argv.toString() == "") { //what the hell
-    console.log("No arguments provided! Showing help page.")
+    console.log("(UsefulCommit) No arguments provided! Showing help page.")
     require(__dirname + "/help.js");
 } else {
     argv.forEach(async function(arg) {
@@ -27,7 +27,7 @@ if (argv.toString() == "") { //what the hell
         if (commit != "" && type != "") {
             require(__dirname + "/commit.js")(commit, type)
         } else {
-            console.log("Missing arguments to Lint!")
+            console.log("(UsefulCommit::Lint) [ERROR] Missing arguments!")
         }
     }
 }
