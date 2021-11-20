@@ -97,10 +97,6 @@ function createWindow () {
 
     loaderMain.loadFile(__dirname + "/loader/loader.html");
 
-    if (windowInfo.isMaximized) {
-        mainWindow.maximize();
-    }
-
     require('@electron/remote/main').initialize();
     require("@electron/remote/main").enable(mainWindow.webContents)
 
@@ -155,6 +151,9 @@ function createWindow () {
             loaderMain.close();
             await sleep(750);
             mainWindow.show();
+            if (windowInfo.isMaximized) {
+                mainWindow.maximize();
+            }
             mainWindow.focus();
         } catch (e) {}
     })
