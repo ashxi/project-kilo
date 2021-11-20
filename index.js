@@ -5,6 +5,8 @@ function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
+const BypassHangup = true;
+
 let mainWindow,
     loaderMain,
     windowInfo;
@@ -77,7 +79,9 @@ function createWindow () {
         });
     }
 
-    mainWindow.hide();
+    if (!BypassHangup) {
+        mainWindow.hide();
+    }
 
     loaderMain = new BrowserWindow({
         width: 253,

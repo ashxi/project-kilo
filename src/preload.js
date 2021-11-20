@@ -1,6 +1,7 @@
 const fs = require("fs"), 
     { contextBridge, ipcRenderer } = require("electron"),
     brew = require("./brewAPI.js").brew;
+const { platform } = require("os");
 
 localStorage.setItem('brewCache_hrefURL', null);
 
@@ -176,6 +177,19 @@ document.addEventListener("DOMContentLoaded", async function() {
     pppSetup();
 
     ipcRenderer.send('ready');
+
+    if (!document.fonts.check("12px Segoe UI")) {
+        if (localStorage.getItem("MSCheck") != '1') {
+            alert("Hey! A required dependency is missing. Please install Segoe UI!");
+            localStorage.setItem("MSCheck", 1);
+        }
+        document.title += " | ERROR: Segoe UI Missing."
+        if (process.platform == "linux") {
+            document.title += " Please install ttf-windows in your package manager."
+        }
+    }
+
+    
 
     await loadKeybindings();
 }) 
