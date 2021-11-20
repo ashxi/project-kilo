@@ -6,8 +6,7 @@ const argv = argvBefore;
 delete argvBefore;
 
 let isLinting = false, commit = "", type = "";
-
-if (argv == []) {
+if (argv.toString() == "") { //what the hell
     console.log("No arguments provided! Showing help page.")
     require(__dirname + "/help.js");
 } else {
