@@ -4,6 +4,6 @@ echo "Commiting '$MAGIC'... Press Ctrl+C to cancel."
 sleep 1s
 echo "Continuing."
 git add .
-git commit -m $'MAGIC'
+git commit -m '$MAGIC'
 git push
 git pull
