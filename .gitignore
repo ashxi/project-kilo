@@ -6,3 +6,4 @@ node_modules/
 /themes/icons/vscode-fluent-icons/src/
 /themes/icons/vscode-fluent-icons/license.txt
 /tooling/maker.done
+/.vscode
