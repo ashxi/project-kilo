@@ -1,5 +1,5 @@
 #!/bin/bash 
-MAGIC=$(./commitr.sh --commit="$1" --type="$2" --lint)
+MAGIC=$(./tooling/usefulcommit/commitr.sh --commit="$1" --type="$2" --lint)
 echo "Commiting '$MAGIC'... Press Ctrl+C to cancel."
 sleep 1s
 echo "Continuing."
