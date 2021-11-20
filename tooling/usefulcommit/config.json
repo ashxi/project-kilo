@@ -1,0 +1,5 @@
+{
+    "validTypes": ["fix", "feature", "chore", "other"],
+    "format": "([VERSION] TYPE): COMMIT_DETAILS",
+    "isEnforced": true
+}

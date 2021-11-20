@@ -1,8 +1,8 @@
 node_modules/
-package-lock.json
-config.json
-themes/fonts/Fira\ Code/FiraCode-Regular.ttf
-themes/fonts/Fira\ Code/license.txt
-themes/icons/vscode-fluent-icons/src/
-themes/icons/vscode-fluent-icons/license.txt
-tooling/maker.done
+/package-lock.json
+/config.json
+/themes/fonts/Fira\ Code/FiraCode-Regular.ttf
+/themes/fonts/Fira\ Code/license.txt
+/themes/icons/vscode-fluent-icons/src/
+/themes/icons/vscode-fluent-icons/license.txt
+/tooling/maker.done
