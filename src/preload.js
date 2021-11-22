@@ -178,18 +178,5 @@ document.addEventListener("DOMContentLoaded", async function() {
 
     ipcRenderer.send('ready');
 
-    if (!document.fonts.check("12px Segoe UI")) {
-        if (localStorage.getItem("MSCheck") != '1') {
-            alert("Hey! A required dependency is missing. Please install Segoe UI!");
-            localStorage.setItem("MSCheck", 1);
-        }
-        document.title += " | ERROR: Segoe UI Missing."
-        if (process.platform == "linux") {
-            document.title += " Please install ttf-windows in your package manager."
-        }
-    }
-
-    
-
     await loadKeybindings();
 }) 
