@@ -1,13 +1,12 @@
 const fs = require("fs"),
       hljs = require("highlight.js"),
-      path = require("path"),
       { ipcRenderer } = require("electron");
 
 const remote = require('@electron/remote');
 const win = remote.getCurrentWindow();
 const dialog = remote.dialog;
 
-const override = false;
+const override = JSON.parse(JSON.stringify(require("../config.json")))["isDevMode"] && JSON.parse(JSON.stringify(require("../config.json")))["bypassConfig"];
 
 async function lazyLoad(data) {
     const html = new DOMParser().parseFromString(data, 'text/html');
