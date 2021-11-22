@@ -1,0 +1,19 @@
+/* FIXME: We should migrate this to fetch via tooling. Although it does work for now. Don't @ me. 
+   - creamy-dev */
+
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 400;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(ops1.ttf) format('truetype');
+}
+
+@font-face {
+  font-family: 'Ubuntu';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(ops2.ttf) format('truetype');
+}

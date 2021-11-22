@@ -1,7 +1,7 @@
 const fs = require("fs"),
       hljs = require("highlight.js"),
       path = require("path"),
-      { contextBridge, ipcRenderer } = require("electron");
+      { ipcRenderer } = require("electron");
 
 const remote = require('@electron/remote');
 const win = remote.getCurrentWindow();

@@ -1,7 +1,6 @@
 const fs = require("fs"), 
     { contextBridge, ipcRenderer } = require("electron"),
     brew = require("./brewAPI.js").brew;
-const { platform } = require("os");
 
 localStorage.setItem('brewCache_hrefURL', null);
 
