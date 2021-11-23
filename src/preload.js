@@ -26,7 +26,7 @@ document.addEventListener("DOMContentLoaded", async function() {
         const {ipcRenderer} = require('electron')
 
         ipcRenderer.on('reload', (event, arg) => {
-            if (localStorage.getItem("initalSetup") == "true") {
+            if (localStorage.getItem("initialSetup") == "true") {
                 brew.location.reload();
             }
          })
