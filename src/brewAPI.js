@@ -48,6 +48,14 @@ const concreteQuirks = {
                 htmlPatch = htmlPatch.replaceAll("\n", "<br>");
                 document.getElementById("setup").innerHTML = htmlPatch;
             }
+        },
+        "projectSelector": async function() {
+            const projectTemplate = `<a href="#" onclick="brew.pj.prompt.openProject('Project1');">Project1</a><br>`;
+            for await(data of JSON.parse(localStorage.getItem("projects"))) {
+                document.getElementById("listOfProjects").innerHTML += projectTemplate.replaceAll("Project1", data.name);
+            }
+
+            document.getElementById("listOfProjects").innerHTML += `<br><button style="background-color: var(--third-background);" onclick="brew.location.replace('index.html')" class="pure-material-button-contained">Go Back</button>`;
         }
     }
 }
@@ -122,14 +130,15 @@ const brew = {
             if (url == "setupStage2.html") {
                 concreteQuirks.DOMPatches.setup();
             }
+        } else if (url == "projectselector.html") {
+            await brew.location.replaceHTML(data);
+            concreteQuirks.DOMPatches.projectSelector();
         } else {
             brew.location.replaceHTML(data);
         }
     },
     reload: function() {
-        let splitter = window.location.href.split("/");
-    
-        brew.location.replace(splitter[splitter.length - 1]);
+        brew.location.replace(brew.location.href());
     },
     restart: function() {
         ipcRenderer.send("restart");
@@ -137,7 +146,7 @@ const brew = {
     href: function() {
         let cache = localStorage.getItem("brewCache_hrefURL");
         
-        if (cache == null) {
+        if (cache == 'null') {
             localStorage.setItem("brewCache_hrefURL", window.location.href.split("/")[window.location.href.split("/").length-1]);
             return(window.location.href.split("/")[window.location.href.split("/").length-1]);
         }
@@ -177,6 +186,23 @@ const brew = {
               await brew.pj.add(name, pathFolders);
               await localStorage.setItem("activeProject", name);
               await brew.location.replace("project.html");
+          },
+          openProject: async function(name) {
+              let isValidProject = false;
+
+              for await(data of JSON.parse(localStorage.getItem("projects"))) {
+                if (data.name == name) {
+                    isValidProject = true;
+                    break;
+                }
+              }
+
+              if (!isValidProject) {
+                  return(new Error("Invalid Project"))
+              }
+
+              localStorage.setItem("activeProject", name);
+              brew.location.replace("project.html");
           }
       },
       add: async function(name, path) {
