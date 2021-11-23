@@ -5,7 +5,7 @@ function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-const BypassHangup = true;
+const BypassHangup = false; // Set to false when commiting, this just forces it (when true) to force mainwindow to not hide & autostarts devtools which REALLY helps for debugging.
 
 let mainWindow,
     loaderMain,
@@ -38,7 +38,7 @@ function createWindow () {
         windowInfo = JSON.parse(magic);
     } catch (err) {
         try {
-            let loadedJSON = `{\n  "width": 800,\n  "height": 600,\n  "x": null,\n  "y": null,\n  "isMaximized": false,\n  "isDevMode": true\n}`;
+            let loadedJSON = `{\n  "width": 800,\n  "height": 600,\n  "x": null,\n  "y": null,\n  "isMaximized": true,\n  "isDevMode": false,\n  "bypassConfig":false\n}`;
             fs.writeFileSync("./config.json", loadedJSON);
             windowInfo = JSON.parse(loadedJSON);
         } catch (e) {
@@ -81,6 +81,8 @@ function createWindow () {
 
     if (!BypassHangup) {
         mainWindow.hide();
+    } else {
+        mainWindow.openDevTools();
     }
 
     loaderMain = new BrowserWindow({

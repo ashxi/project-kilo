@@ -2,75 +2,24 @@ const fs = require("fs"),
     { contextBridge, ipcRenderer } = require("electron"),
     brew = require("./brewAPI.js").brew;
 
+let isBrewError = false;
+
 localStorage.setItem('brewCache_hrefURL', null);
 
 try {
     contextBridge.exposeInMainWorld("brew", brew);
 } catch (e) {
+    isBrewError = true;
     console.warn(`Failed to expose Brew API! This may result in some features not working!\n${e}`);
 }
 
-async function loadThemes() {
-    let themes = [];
-
-    const Filehound = require('filehound'),
-          path      = require("path");
-
-    const source = path.join(__dirname, "..", "themes");
-
-    const dir = await Filehound.create()
-        .path(source)
-        .directory()
-        .find();
-
-        for (subdirectories of dir) {
-            try {
-                let magic = fs.readFileSync(path.join(subdirectories, "themeinfo.json").toString());
-                let temp = JSON.parse(magic);
-
-                temp.license = path.join(subdirectories, temp.license);
-
-                if (temp.type == "theme") {
-                    temp.path = path.join(subdirectories, temp.path);
-                } else if (temp.type == "windowicons") {
-                    temp.path = path.join(subdirectories, temp.path);
-                } else if (temp.type == "font") {
-                    temp.regular = path.join(subdirectories, temp.regular);
-                }
-                themes.push(temp);
-            } catch (error) {
-            }
-        }
-    
-    return themes;
-}
+loadThemes = brew.misc.loadThemes;
 
 document.addEventListener("DOMContentLoaded", async function() {
     let themes;
 
     function sleep(ms) {
         return new Promise(resolve => setTimeout(resolve, ms));
-    }
-
-    async function pppSetup() {
-        while (true) {
-            if (brew.location.href() == "setupStage2.html") {
-                if (!(document.getElementById("setup").innerHTML.includes("String sucessfully compiled."))) {
-                    let str = [];
-                
-                    for (themeJSON of themes) {
-                        let license = `--------Copyright information for ${themeJSON.name}\n\n` + fs.readFileSync(themeJSON.license).toString();
-    
-                        str.push(license);
-                    }
-    
-                    let htmlPatch = str.join("\n\n") + "\n\nConcrete: String sucessfully compiled, with 0 errors.";
-                    htmlPatch = htmlPatch.replaceAll("\n", "<br>");
-                    document.getElementById("setup").innerHTML = htmlPatch;
-                }
-            }
-            await sleep(2000);
-        }
     }
 
     async function loadKeybindings() {
@@ -173,9 +122,12 @@ document.addEventListener("DOMContentLoaded", async function() {
     await loadInit();
     await require("./renderer.js");
     loadTitle();
-    pppSetup();
 
     ipcRenderer.send('ready');
+
+    if (isBrewError) {
+        alert("We failed to expose the Brew API! This will cause the app to break.")
+    }
 
     await loadKeybindings();
 }) 
