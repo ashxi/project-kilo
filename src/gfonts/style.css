@@ -9,11 +9,3 @@
   font-display: swap;
   src: url(ops1.ttf) format('truetype');
 }
-
-@font-face {
-  font-family: 'Ubuntu';
-  font-style: normal;
-  font-weight: 400;
-  font-display: swap;
-  src: url(ops2.ttf) format('truetype');
-}

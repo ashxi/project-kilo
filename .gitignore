@@ -7,3 +7,4 @@ node_modules/
 /themes/icons/vscode-fluent-icons/license.txt
 /tooling/maker.done
 /.vscode
+/src/gfonts/ops1.ttf
