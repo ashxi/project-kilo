@@ -5,6 +5,7 @@ const fs = require("fs"),
 const config = JSON.parse(JSON.stringify(require("../config.json")));
 
 const remote = require('@electron/remote');
+const path = require("path");
 const win = remote.getCurrentWindow();
 const dialog = remote.dialog;
 
@@ -31,8 +32,8 @@ async function lazyLoad(data) {
 }
 
 const concreteQuirks = {
-    "DOMPatches": {
-        "setup": async function() {
+    DOMPatches: {
+        setup: async function() {
             const themes = await brew.misc.loadThemes();
             
             if (!(document.getElementById("setup").innerHTML.includes("String sucessfully compiled."))) {
@@ -49,10 +50,14 @@ const concreteQuirks = {
                 document.getElementById("setup").innerHTML = htmlPatch;
             }
         },
-        "projectSelector": async function() {
+        projectSelector: async function() {
             const projectTemplate = `<a href="#" onclick="brew.pj.prompt.openProject('Project1');">Project1</a><br>`;
-            for await(data of JSON.parse(localStorage.getItem("projects"))) {
-                document.getElementById("listOfProjects").innerHTML += projectTemplate.replaceAll("Project1", data.name);
+            try {
+                for await(data of JSON.parse(localStorage.getItem("projects"))) {
+                    document.getElementById("listOfProjects").innerHTML += projectTemplate.replaceAll("Project1", data.name);
+                }
+            } catch (e) {
+                console.warn(e);
             }
 
             document.getElementById("listOfProjects").innerHTML += `<br><button style="background-color: var(--third-background);" onclick="brew.location.replace('index.html')" class="pure-material-button-contained">Go Back</button>`;
@@ -61,22 +66,19 @@ const concreteQuirks = {
 }
 
 const brew = {
-    "misc": {
-        "loadThemes": async function() {
-            const fs = require("fs"), 
-                  { contextBridge, ipcRenderer } = require("electron");
-            
+    misc: {
+        loadThemes: async function() {
             let themes = [];
         
             const Filehound = require('filehound'),
+                  fs = require("fs"),
                   path      = require("path");
         
-            const source = path.join(__dirname, "..", "themes");
-        
-            const dir = await Filehound.create()
-                .path(source)
-                .directory()
-                .find();
+            const source = path.join(__dirname, "..", "themes"),
+                  dir = await Filehound.create()
+                    .path(source)
+                    .directory()
+                    .find();
         
                 for (subdirectories of dir) {
                     try {
@@ -198,7 +200,7 @@ const brew = {
               }
 
               if (!isValidProject) {
-                  return(new Error("Invalid Project"))
+                  throw("Invalid Project")
               }
 
               localStorage.setItem("activeProject", name);
@@ -223,8 +225,30 @@ const brew = {
       },
       setActiveProject: function(name) {
           localStorage.setItem("activeProject", name);
+      },
+      listFiles: async function(name, subdir) {
+          let isValidProject = false;
+          let pathProject = "";
+  
+          for await(data of JSON.parse(localStorage.getItem("projects"))) {
+            if (data.name == name) {
+                isValidProject = true;
+                pathProject = data.path;
+                break;
+            }
+          }
+  
+          if (!isValidProject) {
+              throw("Invalid Project")
+          }
+
+          if (typeof subdir == "string") {
+            return(fs.readdirSync(path.join(pathProject, subdir)));
+          } else {
+            return(fs.readdirSync(pathProject));
+          }
       }
-  }
+  },
 }
 
 exports.brew = brew;
