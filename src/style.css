@@ -10,6 +10,7 @@
   --sidebar-length: 50px;
   --titlebar-height: 32px;
   --rounded-corners: 10px 0px 0px 0px;
+  --linux-height: 10px;
   --titlebar-bg: var(--secondary-background);
 }
 
@@ -217,7 +218,7 @@ a:hover {
   position: absolute;
   border-radius: var(--rounded-corners);
   left: 0px;
-  height: calc(100% - 10px);
+  height: calc(100% - var(--linux-height));
   background-color: var(--bg-color);
   top: var(--titlebar-height);
   left: var(--sidebar-length);

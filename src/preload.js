@@ -1,5 +1,3 @@
-// Major FIXME: Somehow, when not using Windows, it appears that another titlebar is at the bottom of the screen.
-
 const fs = require("fs"), 
     { contextBridge, ipcRenderer } = require("electron"),
     brew = require("./brewAPI.js").brew;
@@ -36,7 +34,7 @@ document.addEventListener("DOMContentLoaded", async function() {
          ipcRenderer.on('lenox', (event, arg) => {
             document.querySelector(':root').style.setProperty('--titlebar-height', '0px');
             document.querySelector(':root').style.setProperty('--rounded-corners', '0px');
-            document.querySelector(':root').style.setProperty('--titlebar-bg', 'var(--secondary-background)');
+            document.querySelector(':root').style.setProperty('--linux-height', '0px');
          })
     }
     
