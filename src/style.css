@@ -9,6 +9,8 @@
 :root {
   --sidebar-length: 50px;
   --titlebar-height: 32px;
+  --rounded-corners: 10px 0px 0px 0px;
+  --titlebar-bg: var(--secondary-background);
 }
 
 /* Themeing */
@@ -40,7 +42,7 @@ p {
 /* Styling of window frame and titlebar */
 body {
   overflow: hidden;
-  border: 1px solid #48545c;
+  border: 1px solid var(--bg-color);
 }
 
 #titlebar {
@@ -64,7 +66,7 @@ body {
 
 #titlebar {
   padding: 4px;
-  background-color: var(--secondary-background);
+  background-color: var(--titlebar-bg);
 }
 
 #titlebar #drag-region {
@@ -213,7 +215,7 @@ a:hover {
 
 .main {
   position: absolute;
-  border-radius: 10px 0px 0px 0px;
+  border-radius: var(--rounded-corners);
   left: 0px;
   height: calc(100% - 10px);
   background-color: var(--bg-color);

@@ -5,7 +5,8 @@ function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-const BypassHangup = false; // Set to false when commiting, this just forces it (when true) to force mainwindow to not hide & autostarts devtools which REALLY helps for debugging.
+const BypassHangup = false; 
+// Set to false when commiting, this just forces it (when true) to force mainwindow to not hide & autostarts devtools which REALLY helps for debugging.
 
 let mainWindow,
     loaderMain,
@@ -18,7 +19,7 @@ function createWindow () {
                 let builtString;
                 
                 if (mainWindow.isMaximized()) {
-                    builtString = `{\n  "width": ${windowInfo.width},\n  "height": ${windowInfo.height},\n  "x": ${windowInfo.x},\n  "y": ${windowInfo.y},\n  "isMaximized": true,\n  "isDevMode": false,\n  "bypassConfig":false\n}`;
+                    builtString = `{\n  "width": ${windowInfo.width},\n  "height": ${windowInfo.height},\n  "x": ${windowInfo.x},\n  "y": ${windowInfo.y},\n  "isMaximized": true,\n  "isDevMode": ${windowInfo.isDevMode},\n  "bypassConfig":${windowInfo.bypassConfig}\n}`;
                 } else {
                     builtString = `{\n  "width": ${mainWindow.getSize()[0]},\n  "height": ${mainWindow.getSize()[1]},\n  "x": ${mainWindow.getPosition()[0]},\n  "y": ${mainWindow.getPosition()[1]},\n  "isMaximized": ${mainWindow.isMaximized()},\n  "isDevMode": ${windowInfo.isDevMode},\n  "bypassConfig":${windowInfo.bypassConfig}\n}`;
                 }
@@ -46,38 +47,34 @@ function createWindow () {
         }
     }
 
-    if (windowInfo.x == null || windowInfo.y == null) {
-        mainWindow = new BrowserWindow({
-            width: windowInfo.width,
-            height: windowInfo.height,
-            frame: false,
-            backgroundColor: '#FFF',
-            title: "Concrete",
-            webPreferences: {
-                contextIsolation: true,
-                nodeIntegration: true,
-                enableRemoteModule: true,
-                preload: __dirname + "/src/preload.js"
-            } 
-        });
-    } else {
-        mainWindow = new BrowserWindow({
-            width: windowInfo.width,
-            height: windowInfo.height,
-            x: windowInfo.x,
-            y: windowInfo.y,
-            frame: false,
-            backgroundColor: '#FFF',
-            title: "Concrete",
-            icon: __dirname + "/src/logo.png",
-            webPreferences: {
-                contextIsolation: true,
-                nodeIntegration: true,
-                enableRemoteModule: true,
-                preload: __dirname + "/src/preload.js"
-            } 
-        });
+    let config = {
+        width: windowInfo.width,
+        height: windowInfo.height,
+        x: windowInfo.x,
+        y: windowInfo.y,
+        frame: false,
+        backgroundColor: '#FFF',
+        title: "Concrete",
+        icon: __dirname + "/src/logo.png",
+        webPreferences: {
+            contextIsolation: true,
+            nodeIntegration: true,
+            enableRemoteModule: true,
+            preload: __dirname + "/src/preload.js"
+        } 
     }
+
+    if (windowInfo.x == null || windowInfo.y == null) {
+        config.center = true;
+        config.x = null;
+        config.y = null;
+    }
+
+    if (process.platform !== 'win32') {
+        config.frame = true;
+    }
+
+    mainWindow = new BrowserWindow(config);
 
     if (!BypassHangup) {
         mainWindow.hide();
@@ -127,7 +124,8 @@ function createWindow () {
         click: () => {
             app.quit();
         }
-    }];
+    }
+];
 
     if (windowInfo.isDevMode) {
         menuSub.push({
@@ -154,6 +152,9 @@ function createWindow () {
 
     ipcMain.on('ready', async(event, arg) => {
         try {
+            if (process.platform !== 'win32') {
+                mainWindow.webContents.send('lenox', 'hid');
+            }
             loaderMain.close();
             await sleep(750);
             mainWindow.show();
@@ -175,7 +176,6 @@ app.on('window-all-closed', function () {
 
 async function restart() {
     console.log("Restarting...");
-    console.log("------THIS IS NOT A CRASH!------")
     app.relaunch();
     app.exit();
 }

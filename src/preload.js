@@ -1,3 +1,5 @@
+// Major FIXME: Somehow, when not using Windows, it appears that another titlebar is at the bottom of the screen.
+
 const fs = require("fs"), 
     { contextBridge, ipcRenderer } = require("electron"),
     brew = require("./brewAPI.js").brew;
@@ -18,10 +20,6 @@ loadThemes = brew.misc.loadThemes;
 document.addEventListener("DOMContentLoaded", async function() {
     let themes;
 
-    function sleep(ms) {
-        return new Promise(resolve => setTimeout(resolve, ms));
-    }
-
     async function loadKeybindings() {
         const {ipcRenderer} = require('electron')
 
@@ -33,6 +31,12 @@ document.addEventListener("DOMContentLoaded", async function() {
 
          ipcRenderer.on('refresh', (event, arg) => {
             window.location.reload();
+         })
+
+         ipcRenderer.on('lenox', (event, arg) => {
+            document.querySelector(':root').style.setProperty('--titlebar-height', '0px');
+            document.querySelector(':root').style.setProperty('--rounded-corners', '0px');
+            document.querySelector(':root').style.setProperty('--titlebar-bg', 'var(--secondary-background)');
          })
     }
     
@@ -113,15 +117,18 @@ document.addEventListener("DOMContentLoaded", async function() {
     async function loadTitle() {
         while (true) {
             document.getElementById("editorTitle").innerHTML = document.title;
-            await sleep(50);
+            await brew.misc.sleep(50);
         }
     }
 
     themes = await loadThemes();
 
     await loadInit();
-    await require("./renderer.js");
-    loadTitle();
+    
+    try {
+        await require("./renderer.js");
+        loadTitle();
+    } catch (e) {} // Linux fun.
 
     ipcRenderer.send('ready');
 

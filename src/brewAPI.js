@@ -100,6 +100,9 @@ const brew = {
                 }
             
             return themes;
+        },
+        sleep: function(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
         }
     },
     location: {
@@ -248,7 +251,7 @@ const brew = {
             return(fs.readdirSync(pathProject));
           }
       }
-  },
+  }
 }
 
 exports.brew = brew;
