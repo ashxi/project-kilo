@@ -65,8 +65,41 @@ const concreteQuirks = {
     }
 }
 
+/**
+ * brew is an api for bedrock to access various different utilities.
+ * 
+ * to extend brew, just set a child of brew (brew.child) to a function.
+ * 
+ * you can also override default functions using brew.<functionname>.
+ */
 const brew = {
+    /**
+     * misc brew utilities, such as loading themes or sleep a certain amount of time.
+     */
     misc: {
+        /**
+         * loads all themes into an array, which are objects and have a path (or regular) property.
+         * 
+         * it can be 3 different types - Theme, Window Icons, or Font
+         * 
+         * if a font, instead of using object.path, you would use object.regular to get the path to the font.
+         * 
+         * object.path is the path to the theme/window icons
+         * 
+         * all of them have multiple different values:
+         * 
+         * name - name of the font/theme/window-icons
+         * 
+         * shortName - shorthand of ^
+         * 
+         * license - relative path to the license from the font/theme/window-icons' parent folder
+         * 
+         * isPreInstalled - whether or not the font/theme/window-icon set is pre-installed
+         * 
+         * type - type of thing the object is. can either bew font, theme, or windowicons
+         * 
+         * @returns {[]} array of themes, fonts, and window-icons
+         */
         loadThemes: async function() {
             let themes = [];
         
@@ -101,6 +134,11 @@ const brew = {
             
             return themes;
         },
+        /**
+         * returns a promise with a callback of setTimeout for ms seconds.
+         * @param {Number} ms number of milliseconds to sleep
+         * @returns {Promise} promise that waits for a set-timeout to finish
+         */
         sleep: function(ms) {
             return new Promise(resolve => setTimeout(resolve, ms));
         }
