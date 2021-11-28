@@ -10,7 +10,10 @@ const win = remote.getCurrentWindow();
 const dialog = remote.dialog;
 
 const override = config.isDevMode && config.bypassConfig;
-
+/**
+ * lazy loads syntax highlighting, <script> tags, and <title> tags
+ * @param {string} data HTML data to lazyload
+ */
 async function lazyLoad(data) {
     const html = new DOMParser().parseFromString(data, 'text/html');
     let doc = html.getElementsByTagName('script');
@@ -31,6 +34,10 @@ async function lazyLoad(data) {
     }
 }
 
+/**
+ * Not documented because this is internal data. 
+ * quirks for specific web pages to render correctly
+ */
 const concreteQuirks = {
     DOMPatches: {
         setup: async function() {
@@ -135,7 +142,7 @@ const brew = {
             return themes;
         },
         /**
-         * returns a promise with a callback of setTimeout for ms seconds.
+         * returns a promise with a callback of setTimeout for ms milliseconds.
          * @param {Number} ms number of milliseconds to sleep
          * @returns {Promise} promise that waits for a set-timeout to finish
          */
@@ -143,7 +150,15 @@ const brew = {
             return new Promise(resolve => setTimeout(resolve, ms));
         }
     },
+    /**
+     * custom location api, which uses fast methods
+     */
     location: {
+        /**
+         * replaces html with specified data, in a optimized manner.
+         * @param {string} origData RAW html data
+         * @param {boolean} ignore2 bypasses setup lock if true
+         */
       replaceHTML: async function(origData, ignore2) {
         let setupOverride;
 
@@ -164,6 +179,10 @@ const brew = {
 
         lazyLoad(data);
     },
+    /**
+     * replaces html with a specified file, in a optimized manner.
+     * @param {string} url 
+     */
     replace: async function(url) {
         const data = fs.readFileSync(`${__dirname}/${url}`, {encoding:'utf8', flag:'r'});
         localStorage.setItem("brewCache_hrefURL", url);
@@ -180,12 +199,22 @@ const brew = {
             brew.location.replaceHTML(data);
         }
     },
+    /**
+     * reloads in a optimized manner.
+     */
     reload: function() {
         brew.location.replace(brew.location.href());
     },
+    /**
+     * restarts the app.
+     */
     restart: function() {
         ipcRenderer.send("restart");
     },
+    /**
+     * gets the current virtual url.
+     * @returns {string} the current url
+     */
     href: function() {
         let cache = localStorage.getItem("brewCache_hrefURL");
         
@@ -197,7 +226,15 @@ const brew = {
         return(cache);
     }
   },
+  /**
+   * utilities that give information about brew.
+   */
   homebrew: {
+      /**
+       * gives version information for the brew api
+       * @param {boolean} isSilent boolean to determine if the function should be silent or not
+       * @returns version of brew API
+       */
       aboutBrew: function(isSilent) {
           if (!isSilent) {
             console.log(`Running Brew ${brew.homebrew.brewVer}, by Bedrock Team.`);
@@ -206,9 +243,22 @@ const brew = {
       },
       brewVer: JSON.parse(JSON.stringify(require("../package.json")))["version"]
   },
+  /**
+   * API for projects
+   */
   pj: {
+      /**
+       * API for prompts for projects
+       */
       prompt: {
+          /**
+           * dependencies for prompts
+           */
           deps: {
+              /**
+               * opens folder selection prompt, and returns output
+               * @returns {Promise} promise that resolves to a directory path
+               */
                folderPrompt: async function() {
                   const dir = await dialog.showOpenDialog(win, {
                       properties: ['openDirectory']
@@ -221,6 +271,9 @@ const brew = {
                   }
                }
           },
+          /**
+           * adds project from prompt
+           */
           addProject: async function() {
               let folders = await brew.pj.prompt.deps.folderPrompt();
               let pathFolders = folders.filePaths[0];
@@ -230,6 +283,10 @@ const brew = {
               await localStorage.setItem("activeProject", name);
               await brew.location.replace("project.html");
           },
+          /**
+           * opens project if valid in app
+           * @param {string} name name of project
+           */
           openProject: async function(name) {
               let isValidProject = false;
 
@@ -248,6 +305,11 @@ const brew = {
               brew.location.replace("project.html");
           }
       },
+      /**
+       * adds project without using prompt, optimal for scripting
+       * @param {string} name the name of the project
+       * @param {string} path the path to the project
+       */
       add: async function(name, path) {
             let projects = [];
             if (localStorage.getItem("projects") != null) {
@@ -264,9 +326,19 @@ const brew = {
             projects.push(project);
             localStorage.setItem("projects", JSON.stringify(projects));
       },
+      /**
+       * sets the current active project, needed when opening project.html
+       * @param {string} name name of project
+       */
       setActiveProject: function(name) {
           localStorage.setItem("activeProject", name);
       },
+      /**
+       * returns list of files and folders in a project
+       * @param {string} name name of project to search
+       * @param {string} subdir optional, subdirectory to list files in
+       * @returns list of files in project directory
+       */
       listFiles: async function(name, subdir) {
           let isValidProject = false;
           let pathProject = "";
