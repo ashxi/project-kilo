@@ -1,0 +1,11 @@
+# I want to contribute, where do I start?
+You should read along, to find out how to format commits.
+## Formatting commits
+TLDR: Refer to this format.
+```
+type: This has to start with a capital letter, and ends with proper punctuation, spelled correctly. Valid types are feature, chore, fix, and other.
+```
+### Type
+There are three valid types that we will accept, and those are `feature`, `chore`, `fix`, and `other`. These are at the beginning, and must be lowercase, and end with `:`, with a space.
+### Punctuation
+Spell correctly, and please try to commit in English. You can commit in UK English, European English, whatever english works for you that reads correctly, or close enough. Capitalize first, and end properly. 
