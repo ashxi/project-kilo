@@ -5,7 +5,7 @@ Git clone this repository.
 ```
 git clone https://github.com/virtualout/project-kilo
 ```
-Go into tooling and run maker.bat with Windows Subsystem for Linux on Windows, or tooling.sh on Unix OS's with bash in /bin/bash.
+Go into tooling and run maker.bat with Windows Subsystem for Linux on Windows, or tooling.sh on Unix OSes with bash in /bin/bash.
 ```
 maker.bat
 ```
