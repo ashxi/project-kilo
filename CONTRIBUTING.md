@@ -8,4 +8,7 @@ type: This has to start with a capital letter, and ends with proper punctuation,
 ### Type
 There are three valid types that we will accept, and those are `feature`, `chore`, `fix`, and `other`. These are at the beginning, and must be lowercase, and end with `:`, with a space.
 ### Punctuation
-Spell correctly, and please try to commit in English. You can commit in UK English, European English, whatever english works for you that reads correctly, or close enough. Capitalize first, and end properly. 
+Spell correctly, and please try to commit in any type of English. Capitalize first, and end properly. 
+## JSDoc, JSDoc, JSDoc!
+If you make more functions, especially in the Brew API, be sure to JSDoc what you add! [Here's documentation.](https://jsdoc.app/)
+Also, please just document your code anyways. We're starting a project to document all the current code, and new contributors can feel free to start documenting code.
