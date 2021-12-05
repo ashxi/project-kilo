@@ -21,6 +21,11 @@ let logArr = ["[init] Initializing logs..."];
 
 function log(type, string) {
     let args = `[${type}] ${string}`;
+
+    if (type == "") {
+        args = string;
+    }
+
     console.log(args);
     logArr.push(args);
 }
@@ -54,7 +59,7 @@ function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-const BypassHangup = true; 
+const BypassHangup = false; 
 // Set to false when commiting, this just forces it (when true) to force mainwindow to not hide & autostarts devtools which REALLY helps for debugging.
 
 let mainWindow,
@@ -255,7 +260,7 @@ function createWindow () {
 
     ipcMain.on('ready', async(event, arg) => {
         try {
-            log("init", "Main process is ready!");
+            log("init", "Main process is preparing to be ready...");
             if (process.platform !== 'win32') {
                 mainWindow.webContents.send('lenox', 'hid');
             }
@@ -266,6 +271,8 @@ function createWindow () {
                 mainWindow.maximize();
             }
             mainWindow.focus();
+            
+            log("init", "Main process is ready.");
         } catch (e) {
             error("Failed to show main process! Error: " + e);
         }
