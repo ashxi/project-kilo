@@ -87,8 +87,7 @@ document.addEventListener("DOMContentLoaded", async function() {
                 }
 
                 if (themeJSON.shortname == "fira-code") {
-                    // FIXME: Fix installedname to not be needed, as it shouldn't be in utilization.
-                    defaults[1] = [path.relative(__dirname, themeJSON.regular), themeJSON.installedname];
+                    defaults[1] = path.relative(__dirname, themeJSON.regular);
                 }
             } else if (themeJSON.type == "windowicons") {
                 if (themeJSON.shortname == localStorage.getItem("windowicons")) {
@@ -116,6 +115,7 @@ document.addEventListener("DOMContentLoaded", async function() {
 
         // Some weird CSS rules. I don't make the rules.
         let patchAll = paths[1].replaceAll("\\", "/").replaceAll(" ", "\ ");
+        // Creates a font face for the monospace font.
         let font = new FontFace(`codeDefault`, `url("${patchAll}")`);
 
         // Loads the font, then adds it.
