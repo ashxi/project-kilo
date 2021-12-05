@@ -9,6 +9,7 @@
 // Require required modules.
 const fs = require("fs"), 
     { contextBridge, ipcRenderer } = require("electron"),
+    path = require("path"),
     brew = require("./brewAPI.js").brew;
 
 // Variable to warn the user if there is a Brew API initialization error.
@@ -80,8 +81,6 @@ document.addEventListener("DOMContentLoaded", async function() {
                       defaults[0] = themeJSON.path;
                   }
               } else if (themeJSON.type == "font") {
-                const path = require("path");
-
                 if (themeJSON.shortname == localStorage.getItem("font")) {
                     paths[1] = path.relative(__dirname, themeJSON.regular);
                 }
