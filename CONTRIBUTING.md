@@ -11,4 +11,4 @@ There are three valid types that we will accept, and those are `feature`, `chore
 Spell correctly, and please try to commit in any type of English. Capitalize first, and end properly. 
 ## JSDoc, JSDoc, JSDoc!
 If you make more functions, especially in the Brew API, be sure to JSDoc what you add! [Here's documentation.](https://jsdoc.app/)
-Also, please just document your code anyways. We're starting a project to document all the current code, and new contributors can feel free to start documenting code.
+Also, please just document your code anyways.

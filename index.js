@@ -1,3 +1,11 @@
+/*
+  Window management & initialization code.
+
+  Copyright (c) 2021 Concrete Team
+  Licensed under the MIT License (MIT).
+  Happy Coding! :^)
+*/
+
 const { app, BrowserWindow, ipcMain, dialog, Menu, MenuItem } = require('electron'),
       fs = require('fs');
 
@@ -12,9 +20,8 @@ const BypassHangup = false;
 let mainWindow,
     loaderMain,
     windowInfo;
-/*
-* Creates windows, loading screen and main display.
-*/
+
+// Creates windows, loading screen and main display.
 function createWindow () {
     // Auto updates the config, manually.
     async function autoUpdate() {

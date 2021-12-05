@@ -36,7 +36,7 @@ async function lazyLoad(data) {
 
 /**
  * Not documented because this is internal data. 
- * quirks for specific web pages to render correctly
+ * Quirks for specific web pages to render correctly
  */
 const concreteQuirks = {
     DOMPatches: {
@@ -364,4 +364,5 @@ const brew = {
   }
 }
 
+// Give brew to the exports
 exports.brew = brew;
