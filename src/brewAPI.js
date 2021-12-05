@@ -155,7 +155,8 @@ const brew = {
          */
         crash: async function(message) {
             return(await ipcRenderer.send("error", message));
-        }
+        },
+        
     },
     /**
      * custom location api, which uses fast methods

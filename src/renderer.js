@@ -29,21 +29,25 @@ function handleWindowControls() {
     // When the minimized button is pressed, minimize the window. 
     ipcRenderer.send("logging", "[renderer.js] Activated button handler...");
     document.getElementById('min-button').addEventListener("click", event => {
+        ipcRenderer.send("logging", "[renderer.js] Minimizing window...");
         win.minimize();
     });
 
     // When the maximized button is pressed, maximize the window.
     document.getElementById('max-button').addEventListener("click", event => {
+        ipcRenderer.send("logging", "[renderer.js] Maximizing window...");
         win.maximize();
     });
 
     // When the un-maximized button is pressed, un-maximize the window.
     document.getElementById('restore-button').addEventListener("click", event => {
+        ipcRenderer.send("logging", "[renderer.js] Restoring window...");
         win.unmaximize();
     });
 
     // When the close button is pressed, close the window.
     document.getElementById('close-button').addEventListener("click", event => {
+        ipcRenderer.send("logging", "[renderer.js] Closing window...");
         win.close();
     });
 

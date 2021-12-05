@@ -7,6 +7,7 @@
 */
 
 const { app, BrowserWindow, ipcMain, dialog, Menu, MenuItem } = require('electron'),
+      { performance } = require('perf_hooks'),
       fs = require('fs');
 
 let logArr = ["[init] Initializing logs..."];
@@ -20,10 +21,11 @@ let logArr = ["[init] Initializing logs..."];
  */
 
 function log(type, string) {
-    let args = `[${type}] ${string}`;
+    let time = new Date().toString().split(" ");
+    let args = `(${time[4]}) [${type}] ${string}`;
 
     if (type == "") {
-        args = string;
+        args = args.replace(" []", "");
     }
 
     console.log(args);
@@ -74,6 +76,7 @@ function createWindow () {
     async function autoUpdate() {
         while (true) {
             try {
+                //log("init::autoUpdate::config", "Updating config...");
                 // Built string for config.
                 let builtString;
                 
@@ -88,6 +91,7 @@ function createWindow () {
                 await fs.promises.writeFile('./config.json', builtString);
                 // Updates 'windowInfo' to latest builtString
                 windowInfo = JSON.parse(builtString);
+                //log("init::autoUpdate::config", "Config updated.");
             } catch (e) {
                 // Not *completely* fatal if it fails, although important. This could be caused by the local disk being full.
                 log("autoUpdate", "Failed to update config.json, error: " + e);
@@ -273,6 +277,7 @@ function createWindow () {
             mainWindow.focus();
             
             log("init", "Main process is ready.");
+            log("init", `Total time taken to initialize: ${performance.now() / 1000}`);
         } catch (e) {
             error("Failed to show main process! Error: " + e);
         }
@@ -286,10 +291,12 @@ app.on('ready', createWindow);
 // If on macOS, quit the macOS way:tm:.
 // Else, exit normally.
 
-app.on('window-all-closed', function () {
-    if (process.platform !== 'darwin') {
-        app.quit();
+app.on('window-all-closed', async function() {
+    log("init", "Exiting...");
+    if (windowInfo.isDevMode) {
+        await fs.writeFileSync("./log.txt", logArr.join("\n"));
     }
+    app.quit();
 });
 
 // Function to restart the app, by using relaunch and exit.
