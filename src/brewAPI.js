@@ -148,6 +148,13 @@ const brew = {
          */
         sleep: function(ms) {
             return new Promise(resolve => setTimeout(resolve, ms));
+        },
+        /**
+         * crashes app with choice of message.
+         * @param {string} message message to send to event handler to crash with
+         */
+        crash: async function(message) {
+            return(await ipcRenderer.send("error", message));
         }
     },
     /**

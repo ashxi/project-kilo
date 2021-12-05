@@ -8,3 +8,4 @@ node_modules/
 /tooling/maker.done
 /.vscode
 /src/gfonts/ops1.ttf
+/log.txt

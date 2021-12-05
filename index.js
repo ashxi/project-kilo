@@ -9,17 +9,59 @@
 const { app, BrowserWindow, ipcMain, dialog, Menu, MenuItem } = require('electron'),
       fs = require('fs');
 
+let logArr = ["[init] Initializing logs..."];
+
+// Function to save logs to array, and print to console.
+
+/**
+ * logs message to console and saves to log array, to possibly be saved to file later.
+ * @param {string} type type of log message
+ * @param {string} string log message 
+ */
+
+function log(type, string) {
+    let args = `[${type}] ${string}`;
+    console.log(args);
+    logArr.push(args);
+}
+
+/**
+ * crashes app to be used under fatal conditions.
+ * @param {string} arg error message
+ */
+async function error(arg) {
+    log("init", "Recieved error signal, force quitting...");
+    log("init", "Error: " + arg);
+    // Close the main window.
+    try {
+        mainWindow.close();
+    } catch (e) {
+        log("init", "Error closing main window: " + e);
+    }
+    // Try to close loader.
+    try {
+        loaderMain.close();
+    } catch (e) {
+        log("init", "Loader window was not open, continuing...");
+    }
+    await fs.writeFileSync("./log.txt", logArr.join("\n"));
+    // Show dialog error box.
+    dialog.showErrorBox("Error", "An fatal error has occured. Please restart the app.");
+    app.quit();
+}
 // Sleep function needed for while(true) loops.
 function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-const BypassHangup = false; 
+const BypassHangup = true; 
 // Set to false when commiting, this just forces it (when true) to force mainwindow to not hide & autostarts devtools which REALLY helps for debugging.
 
 let mainWindow,
     loaderMain,
     windowInfo;
+
+log("init", "Initializing createWindow()...");
 
 // Creates windows, loading screen and main display.
 function createWindow () {
@@ -43,6 +85,7 @@ function createWindow () {
                 windowInfo = JSON.parse(builtString);
             } catch (e) {
                 // Not *completely* fatal if it fails, although important. This could be caused by the local disk being full.
+                log("autoUpdate", "Failed to update config.json, error: " + e);
                 console.warn(e);
             }
 
@@ -52,16 +95,21 @@ function createWindow () {
 
     try {
         // Reads config, and writes it at initialization.
+        log("init", "Reading config.json...");
         let magic = fs.readFileSync("./config.json");
         windowInfo = JSON.parse(magic);
+        log("init", "Config.json read.");
     } catch (err) {
         try {
             // Saves loaded configuration if it doesn't exist.
+            log("init", "Config.json not found, creating...");
             let loadedJSON = `{\n  "width": 800,\n  "height": 600,\n  "x": null,\n  "y": null,\n  "isMaximized": true,\n  "isDevMode": false,\n  "bypassConfig":false\n}`;
             fs.writeFileSync("./config.json", loadedJSON);
             windowInfo = JSON.parse(loadedJSON);
+            log("init", "Config.json created.");
         } catch (e) {
             // Near fatal error, warns the user via console that there was 2 errors loading the config.
+            log("init", "Failed to create config.json, error: " + e);
             console.error(`There were 2 errors loading the configuration! ${err}; ${e}`);   
         }
     }
@@ -99,6 +147,8 @@ function createWindow () {
         config.frame = true;
     }
 
+    log("init", "Creating main window...");
+
     mainWindow = new BrowserWindow(config);
       
     // If local debug mode is true, we don't hide the window and open dev tools instead.
@@ -125,6 +175,9 @@ function createWindow () {
             enableRemoteModule: true,
         } 
     });
+
+
+    log("init", "Loading loader window...");
       
     // Hides loader until DOM is loaded.
 
@@ -193,6 +246,7 @@ function createWindow () {
     // Intialize the loader. 
     
     loaderMain.webContents.once('dom-ready', () => {
+        log("init", "Loader window loaded.");
         loaderMain.show();
         loaderMain.focus();
     });
@@ -201,6 +255,7 @@ function createWindow () {
 
     ipcMain.on('ready', async(event, arg) => {
         try {
+            log("init", "Main process is ready!");
             if (process.platform !== 'win32') {
                 mainWindow.webContents.send('lenox', 'hid');
             }
@@ -211,7 +266,9 @@ function createWindow () {
                 mainWindow.maximize();
             }
             mainWindow.focus();
-        } catch (e) {}
+        } catch (e) {
+            error("Failed to show main process! Error: " + e);
+        }
     })
 }
 
@@ -240,4 +297,14 @@ async function restart() {
 
 ipcMain.on('restart', async(event, arg) => {
     restart();
+})
+
+// When recieved error signal, force quit.
+
+ipcMain.on('error', async(event, arg) => {
+    error(arg);
+})
+
+ipcMain.on('logging', async(event, arg) => {
+    log("", arg);
 })

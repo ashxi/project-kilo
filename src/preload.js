@@ -12,31 +12,34 @@ const fs = require("fs"),
     path = require("path"),
     brew = require("./brewAPI.js").brew;
 
-// Variable to warn the user if there is a Brew API initialization error.
-let isBrewError = false;
+ipcRenderer.send("logging", "[preload.js] Initializing...");
 
 // Resets the brew cache.
 localStorage.setItem('brewCache_hrefURL', null);
 
+ipcRenderer.send("logging", "[preload.js] Wiping brew cache...");
+
 try {
+    ipcRenderer.send("logging", "[preload.js] Initializing brew library...");
     // Exposes brew in the main world.
     contextBridge.exposeInMainWorld("brew", brew);
 } catch (e) {
-    // On error, sets the brew error flag, and warns the console.
-    isBrewError = true;
-    console.warn(`Failed to expose Brew API! This may result in some features not working!\n${e}`);
+    // On error, crash app.
+    brew.misc.crash("[preload.js] Failed to initialize brew library.");
 }
 
 // Redirects the load themes function. 
 loadThemes = brew.misc.loadThemes;
 
 document.addEventListener("DOMContentLoaded", async function() {
+    ipcRenderer.send("logging", "[preload.js] Initializing window patching...");
     // Variable to store raw theme data.
     let themes;
 
     // This functions loads the keybindings, using ipcRender to communicate with the main process.
     async function loadKeybindings() {
         const {ipcRenderer} = require('electron')
+        ipcRenderer.send("logging", "[preload.js] Loading keybindings...");
 
         ipcRenderer.on('reload', (event, arg) => {
             // If initial setup is complete, reload the app.
@@ -52,6 +55,7 @@ document.addEventListener("DOMContentLoaded", async function() {
     }
     
     async function loadInit() {
+        ipcRenderer.send("logging", "[preload.js] Loading init...");
         // Reads the base file, for initialization.
         const data = fs.readFileSync(__dirname + "/base.html", {encoding:'utf8', flag:'r'});
 
@@ -62,6 +66,7 @@ document.addEventListener("DOMContentLoaded", async function() {
             
         // If the setup is not started or complete, set the themes to default.
         if (localStorage.getItem("initialSetup") != "true") {
+            ipcRenderer.send("logging", "[preload.js] Initial setup not complete, setting default config...");
             localStorage.setItem("theme", "default");
             localStorage.setItem("font", "fira-code");
             localStorage.setItem("windowicons", "vscode-fluent-icons");
@@ -73,6 +78,7 @@ document.addEventListener("DOMContentLoaded", async function() {
             // Else, if accurate, sets the localStorage's theme to the path.
             // Repeat for all of code snippets.
               if (themeJSON.type == "theme") {
+                  ipcRenderer.send("logging", `[preload.js] Setting theme ${themeJSON.shortname}...`);
                   if (themeJSON.shortname == localStorage.getItem("theme")) {
                       paths[0] = themeJSON.path;
                   }
@@ -81,6 +87,7 @@ document.addEventListener("DOMContentLoaded", async function() {
                       defaults[0] = themeJSON.path;
                   }
               } else if (themeJSON.type == "font") {
+                ipcRenderer.send("logging", `[preload.js] Setting font ${themeJSON.shortname}...`);
                 if (themeJSON.shortname == localStorage.getItem("font")) {
                     paths[1] = path.relative(__dirname, themeJSON.regular);
                 }
@@ -89,6 +96,7 @@ document.addEventListener("DOMContentLoaded", async function() {
                     defaults[1] = path.relative(__dirname, themeJSON.regular);
                 }
             } else if (themeJSON.type == "windowicons") {
+                ipcRenderer.send("logging", `[preload.js] Setting icons class 0 ${themeJSON.shortname}...`);
                 if (themeJSON.shortname == localStorage.getItem("windowicons")) {
                     paths[2] = themeJSON.path;
                 }
@@ -101,17 +109,22 @@ document.addEventListener("DOMContentLoaded", async function() {
 
         // If undefined, sets the default to the path for each.
         if (paths[0] == "") {
+            ipcRenderer.send("logging", `[preload.js] Loading defaults for themes...`);
             paths[0] = defaults[0];
         } else if (paths[1] == "") {
+            ipcRenderer.send("logging", `[preload.js] Loading defaults for fonts...`);
             paths[1] = defaults[1];
         } else if (paths[2] == "") {
+            ipcRenderer.send("logging", `[preload.js] Loading defaults for icons class 0...`);
             paths[2] = defaults[2];
         }
 
         // Reads the theme data in an async way.
 
+        ipcRenderer.send("logging", `[preload.js] Reading theme...`);
         let theme = await fs.readFileSync(paths[0], {encoding:'utf8', flag:'r'});
 
+        ipcRenderer.send("logging", `[preload.js] Reading font...`);
         // Some weird CSS rules. I don't make the rules.
         let patchAll = paths[1].replaceAll("\\", "/").replaceAll(" ", "\ ");
         // Creates a font face for the monospace font.
@@ -126,11 +139,13 @@ document.addEventListener("DOMContentLoaded", async function() {
         let windowicons = paths[2];
 
         // Sets the innerHTML to be updated.
+        ipcRenderer.send("logging", `[preload.js] Pre-Patching DOM...`);
         document.body.innerHTML = `${data}<style>${theme}</style><div id="mainWindow" class="main"></div>`;
 
         // Sets the background color to the default theme's background color.
         document.body.style.backgroundColor = "#2a3c3c";
         // Uses brew to set the window's location.
+        ipcRenderer.send("logging", `[preload.js] Handing over control to brew...`);
         brew.location.replace(brew.location.href());
     }
 
@@ -163,12 +178,8 @@ document.addEventListener("DOMContentLoaded", async function() {
 
     ipcRenderer.send('ready');
 
-    // If there is a brew error, warn the user and tell them that the app will break.
-    if (isBrewError) {
-        alert("We failed to expose the Brew API! This will cause the app to break.")
-    }
-
     // Load the keybindings in an async way.
 
     await loadKeybindings();
+    ipcRenderer.send("logging", "[preload.js] Keybindings loaded.");
 }) 

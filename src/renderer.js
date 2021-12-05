@@ -6,6 +6,9 @@
   Happy Coding! :^)
 */
 
+// Loads logging capabilities.
+const { contextBridge, ipcRenderer } = require("electron");
+
 // Loads remote window, to manage.
 const remote = require('@electron/remote');
 const win = remote.getCurrentWindow();
@@ -18,10 +21,13 @@ window.onbeforeunload = (event) => {
     win.removeAllListeners();
 }
 
+ipcRenderer.send("logging", "[renderer.js] Renderer initializing...");
+
 // Main function, only called on Windows.
 // When called on macOS or Linux, error out.
 function handleWindowControls() {
     // When the minimized button is pressed, minimize the window. 
+    ipcRenderer.send("logging", "[renderer.js] Activated button handler...");
     document.getElementById('min-button').addEventListener("click", event => {
         win.minimize();
     });
@@ -58,3 +64,5 @@ function handleWindowControls() {
         }
     }
 }
+
+ipcRenderer.send("logging", "[renderer.js] Renderer initialized.");
