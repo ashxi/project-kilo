@@ -14,6 +14,14 @@ let logArr = ["[init] Initializing logs..."];
 
 // Function to save logs to array, and print to console.
 
+// Function to restart the app, by using relaunch and exit.
+
+async function restart() {
+    console.log("Restarting...");
+    app.relaunch();
+    app.exit();
+}
+
 /**
  * logs message to console and saves to log array, to possibly be saved to file later.
  * @param {string} type type of log message
@@ -213,10 +221,10 @@ function createWindow () {
             mainWindow.webContents.send('reload', 'reloadWindow')
         }
     }, {
-        label: "Refresh Renderer",
+        label: "Restart App",
         accelerator: "Ctrl+Shift+R",
         click: () => {
-            mainWindow.webContents.send('refresh', 'reloadRenderer')
+            restart()
         }
     }, {
         label: 'Quit',
@@ -298,14 +306,6 @@ app.on('window-all-closed', async function() {
     }
     app.quit();
 });
-
-// Function to restart the app, by using relaunch and exit.
-
-async function restart() {
-    console.log("Restarting...");
-    app.relaunch();
-    app.exit();
-}
 
 // When recieved the restart event, call restart()
 
