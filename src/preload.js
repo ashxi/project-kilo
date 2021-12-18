@@ -146,7 +146,8 @@ document.addEventListener("DOMContentLoaded", async function() {
         document.body.style.backgroundColor = "#2a3c3c";
         // Uses brew to set the window's location.
         ipcRenderer.send("logging", `[preload.js] Handing over control to brew...`);
-        brew.location.replace(brew.location.href());
+        await brew.location.replace(brew.location.href());
+        ipcRenderer.send("logging", `[preload.js] Brew has returned.`);
     }
 
     // Loads the document title into the brew title every 50ms.
