@@ -9,7 +9,9 @@ const path = require("path");
 const win = remote.getCurrentWindow();
 const dialog = remote.dialog;
 
+// Override if it is dev mode, and if bypass config is enabled.
 const override = config.isDevMode && config.bypassConfig;
+
 /**
  * lazy loads syntax highlighting, <script> tags, and <title> tags
  * @param {string} data HTML data to lazyload
@@ -60,11 +62,9 @@ const concreteQuirks = {
         projectSelector: async function() {
             const projectTemplate = `<a href="#" onclick="brew.pj.prompt.openProject('Project1');">Project1</a><br>`;
             try {
-                for await(data of JSON.parse(localStorage.getItem("projects"))) {
-                    document.getElementById("listOfProjects").innerHTML += projectTemplate.replaceAll("Project1", data.name);
-                }
+                for await(data of JSON.parse(localStorage.getItem("projects"))) document.getElementById("listOfProjects").innerHTML += projectTemplate.replaceAll("Project1", data.name);
             } catch (e) {
-                console.warn(e);
+                brew.misc.crash("Error loading license files: " + e);
             }
 
             document.getElementById("listOfProjects").innerHTML += `<br><button style="background-color: var(--third-background);" onclick="brew.location.replace('index.html')" class="pure-material-button-contained">Go Back</button>`;
@@ -97,7 +97,7 @@ const brew = {
          * 
          * name - name of the font/theme/window-icons
          * 
-         * shortName - shorthand of ^
+         * shortName - shorthand of name
          * 
          * license - relative path to the license from the font/theme/window-icons' parent folder
          * 
