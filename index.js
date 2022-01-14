@@ -10,6 +10,10 @@ const { app, BrowserWindow, ipcMain, dialog, Menu, MenuItem } = require('electro
       { performance } = require('perf_hooks'),
       fs = require('fs');
 
+let mainWindow,
+    loaderMain,
+    windowInfo;
+
 let logArr = ["[init] Initializing logs..."];
 
 // Function to save logs to array, and print to console.
@@ -69,12 +73,7 @@ function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-const BypassHangup = false; 
-// Set to false when commiting, this just forces it (when true) to force mainwindow to not hide & autostarts devtools which REALLY helps for debugging.
-
-let mainWindow,
-    loaderMain,
-    windowInfo;
+const BypassHangup = windowInfo.bypassHangup;
 
 log("init", "Initializing createWindow()...");
 
@@ -120,7 +119,7 @@ function createWindow () {
         try {
             // Saves loaded configuration if it doesn't exist.
             log("init", "Config.json not found, creating...");
-            let loadedJSON = `{\n  "width": 800,\n  "height": 600,\n  "x": null,\n  "y": null,\n  "isMaximized": true,\n  "isDevMode": false,\n  "bypassConfig":false\n}`;
+            let loadedJSON = `{\n  "width": 800,\n  "height": 600,\n  "x": null,\n  "y": null,\n  "isMaximized": true,\n  "isDevMode": false,\n  "bypassConfig":false,\n  "bypassHangup": false}`;
             fs.writeFileSync("./config.json", loadedJSON);
             windowInfo = JSON.parse(loadedJSON);
             log("init", "Config.json created.");
