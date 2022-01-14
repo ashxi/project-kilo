@@ -39,7 +39,6 @@ let packages = [{
     name: "Fira Code",
     install: async function(tmp) {
         progressBar(0);
-        console.log(1)
         let data = await axios.get("https://api.github.com/repos/tonsky/FiraCode/releases/latest")
         data = await axios.request({
             method: 'GET',
@@ -55,7 +54,7 @@ let packages = [{
         progressBar(0);
         await fs.writeFileSync(tmp + "/FiraCode.zip", Buffer.from(data.data, 'binary'));
         progressBar(50);
-        await extractDir(tmp + "/FiraCode.zip", "tmp/Fira")
+        await extractDir(tmp + "/FiraCode.zip", tmp + "/Fira")
         progressBar(100);
         await fs.renameSync("tmp/Fira/ttf/FiraCode-Regular.ttf", "themes/fonts/Fira Code/FiraCode-Regular.ttf");
     }
