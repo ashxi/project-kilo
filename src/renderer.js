@@ -28,28 +28,44 @@ ipcRenderer.send("logging", "[renderer.js] Renderer initializing...");
 function handleWindowControls() {
     // When the minimized button is pressed, minimize the window. 
     ipcRenderer.send("logging", "[renderer.js] Activated button handler...");
-    document.getElementById('min-button').addEventListener("click", event => {
-        ipcRenderer.send("logging", "[renderer.js] Minimizing window...");
-        win.minimize();
-    });
+    try {
+        document.getElementById('min-button').addEventListener("click", event => {
+            ipcRenderer.send("logging", "[renderer.js] Minimizing window...");
+            win.minimize();
+        });
+    } catch (e) {
+        ipcRenderer.send("logging", '[renderer.js] Failed to add event listener for the minimize button.')
+    }
 
     // When the maximized button is pressed, maximize the window.
-    document.getElementById('max-button').addEventListener("click", event => {
-        ipcRenderer.send("logging", "[renderer.js] Maximizing window...");
-        win.maximize();
-    });
+    try {
+        document.getElementById('max-button').addEventListener("click", event => {
+            ipcRenderer.send("logging", "[renderer.js] Maximizing window...");
+            win.maximize();
+        });
+    } catch (e) {
+        ipcRenderer.send("logging", '[renderer.js] Failed to add event listener for the maximize button.')   
+    }
 
     // When the un-maximized button is pressed, un-maximize the window.
-    document.getElementById('restore-button').addEventListener("click", event => {
-        ipcRenderer.send("logging", "[renderer.js] Restoring window...");
-        win.unmaximize();
-    });
+    try {
+        document.getElementById('restore-button').addEventListener("click", event => {
+            ipcRenderer.send("logging", "[renderer.js] Restoring window...");
+            win.unmaximize();
+        });
+    } catch (e) {
+        ipcRenderer.send("logging", '[renderer.js] Failed to add event listener for the restore button.')
+    }
 
     // When the close button is pressed, close the window.
-    document.getElementById('close-button').addEventListener("click", event => {
-        ipcRenderer.send("logging", "[renderer.js] Closing window...");
-        win.close();
-    });
+    try {
+        document.getElementById('close-button').addEventListener("click", event => {
+            ipcRenderer.send("logging", "[renderer.js] Closing window...");
+            win.close();
+        });
+    } catch (e) {
+        ipcRenderer.send("logging", '[renderer.js] Failed to add event listener for the close button.')
+    }
 
     // Toggles the maximize and restore buttons.
     toggleMaxRestoreButtons();
@@ -61,10 +77,14 @@ function handleWindowControls() {
     function toggleMaxRestoreButtons() {
         // If it's maximized, we add the maximize class to the body.
         // Else, we remove it.
-        if (win.isMaximized()) {
-            document.body.classList.add('maximized');
-        } else {
-            document.body.classList.remove('maximized');
+        try {
+            if (win.isMaximized()) {
+                document.body.classList.add('maximized');
+            } else {
+                document.body.classList.remove('maximized');
+            }
+        } catch (e) {
+            ipcRenderer.send("logging", '[renderer.js] Failed to toggle maximize/restore buttons.')
         }
     }
 }
