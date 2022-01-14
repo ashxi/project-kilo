@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="UTF-8">
+
+    <link rel="stylesheet" href="../src/style.css" />
+    <link rel="stylesheet" href="materialize/css/materialize.min.css" />
+    <link rel="stylesheet" href="../themes/themes/default/default.css" />
+    <script src="materialize/js/materialize.min.js"></script>
+    <link href="../src/gfonts/style.css" rel="stylesheet">
+  </head>
+  <body>
+
+    <header id="titlebar">
+      <div id="drag-region">
+
+        <div id="window-title">
+         <b><span id="editorTitle"></span></b>
+        </div>
+
+        <div id="window-controls">
+
+          <div class="button" id="min-button">
+            <img class="icon" srcset="../src/icons/min-w-10.png 1x, ../src/icons/min-w-12.png 1.25x, ../src/icons/min-w-15.png 1.5x, ../src/icons/min-w-15.png 1.75x, ../src/icons/min-w-20.png 2x, ../src/icons/min-w-20.png 2.25x, ../src/icons/min-w-24.png 2.5x, ../src/icons/min-w-30.png 3x, ../src/icons/min-w-30.png 3.5x" draggable="false" />
+          </div>
+        </div>
+      </div>
+    </header>
+  </body>
+</html>
+
+<div class="main fixpos">
+    Installing '<h20 id="package-name">initializer</h20>'<br>
+    <div class="progress cyan darken-4">
+        <div class="indeterminate cyan darken-2"></div>
+    </div>
+</div>
+
+<style>
+    .main {
+        position: absolute;
+        top: 40px;
+        left: 10px;
+    }
+
+    #min-button {
+        position: absolute;
+        right: -50px;
+    }
+</style>

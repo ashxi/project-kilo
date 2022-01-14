@@ -9,3 +9,6 @@ node_modules/
 /.vscode
 /src/gfonts/ops1.ttf
 /log.txt
+/isSetup.txt
+/yarn.lock
+/tmp

@@ -9,8 +9,11 @@
 const { app, BrowserWindow, ipcMain, dialog, Menu, MenuItem } = require('electron'),
       { performance } = require('perf_hooks'),
       fs = require('fs');
+const { crash } = require('process');
 
 let mainWindow,
+    setupWindow,
+    isSetupCheck,
     loaderMain,
     windowInfo;
 
@@ -19,11 +22,23 @@ let logArr = ["[init] Initializing logs..."];
 // Function to save logs to array, and print to console.
 
 // Function to restart the app, by using relaunch and exit.
-
 async function restart() {
     console.log("Restarting...");
     app.relaunch();
     app.exit();
+}
+
+/**
+ * Checks if the app is setup or not.
+ * @returns {boolean} true if the app is setup, false if not.
+ */
+async function isSetup() {
+    try {
+        await fs.readFileSync("./isSetup.txt");
+        return true;
+    } catch (e) {
+        return false;
+    }
 }
 
 /**
@@ -73,12 +88,10 @@ function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-const BypassHangup = windowInfo.bypassHangup;
-
 log("init", "Initializing createWindow()...");
 
 // Creates windows, loading screen and main display.
-function createWindow () {
+async function createWindow () {
     // Auto updates the config, manually.
     async function autoUpdate() {
         while (true) {
@@ -89,9 +102,9 @@ function createWindow () {
                 
                 // If is maximized, return same height with maximized paramater.
                 if (mainWindow.isMaximized()) {
-                    builtString = `{\n  "width": ${windowInfo.width},\n  "height": ${windowInfo.height},\n  "x": ${windowInfo.x},\n  "y": ${windowInfo.y},\n  "isMaximized": true,\n  "isDevMode": ${windowInfo.isDevMode},\n  "bypassConfig":${windowInfo.bypassConfig}\n}`;
+                    builtString = `{\n  "width": ${windowInfo.width},\n  "height": ${windowInfo.height},\n  "x": ${windowInfo.x},\n  "y": ${windowInfo.y},\n  "isMaximized": true,\n  "isDevMode": ${windowInfo.isDevMode},\n  "bypassConfig":${windowInfo.bypassConfig},\n  "bypassHangup": ${windowInfo.bypassHangup}\n}`;
                 } else {
-                    builtString = `{\n  "width": ${mainWindow.getSize()[0]},\n  "height": ${mainWindow.getSize()[1]},\n  "x": ${mainWindow.getPosition()[0]},\n  "y": ${mainWindow.getPosition()[1]},\n  "isMaximized": ${mainWindow.isMaximized()},\n  "isDevMode": ${windowInfo.isDevMode},\n  "bypassConfig":${windowInfo.bypassConfig}\n}`;
+                    builtString = `{\n  "width": ${mainWindow.getSize()[0]},\n  "height": ${mainWindow.getSize()[1]},\n  "x": ${mainWindow.getPosition()[0]},\n  "y": ${mainWindow.getPosition()[1]},\n  "isMaximized": ${mainWindow.isMaximized()},\n  "isDevMode": ${windowInfo.isDevMode},\n  "bypassConfig":${windowInfo.bypassConfig},\n  "bypassHangup": ${windowInfo.bypassHangup}\n}`;
                 }
 
                 // Writes file to local config.json
@@ -100,9 +113,13 @@ function createWindow () {
                 windowInfo = JSON.parse(builtString);
                 //log("init::autoUpdate::config", "Config updated.");
             } catch (e) {
-                // Not *completely* fatal if it fails, although important. This could be caused by the local disk being full.
-                log("autoUpdate", "Failed to update config.json, error: " + e);
-                console.warn(e);
+                if (e.toString().startsWith("TypeError: Object has been destroyed")) {
+                    crash("Error: Object has been destroyed");
+                } else {
+                    // Not *completely* fatal if it fails, although important. This could be caused by the local disk being full.
+                    log("autoUpdate", "Failed to update config.json, error: " + e);
+                    console.warn(e);
+                }
             }
 
             await sleep(2500);
@@ -165,13 +182,41 @@ function createWindow () {
 
     log("init", "Creating main window...");
 
-    mainWindow = new BrowserWindow(config);
+    isSetupCheck = await isSetup();
+
+    let filePath = './src/index.html';
+
+    if (!isSetupCheck) {
+        log("init", "isSetup() returned false, loading installer...");
+        config.webPreferences.preload = __dirname + "/installer/preload.js";
+        config.width = 500;
+        config.height = 150;
+        config.x = null;
+        config.y = null;
+        config.center = true;
+        config.autoHideMenuBar = true;
+
+        filePath = "./installer/index.html";
+
+        setupWindow = new BrowserWindow(config);
+        setupWindow.loadFile(filePath);
+        //setupWindow.toggleDevTools();
+    } else {
+        mainWindow = new BrowserWindow(config);
+        mainWindow.loadFile(filePath);
+    }
+
+    const BypassHangup = windowInfo.bypassHangup;
       
     // If local debug mode is true, we don't hide the window and open dev tools instead.
     // Else, hide the window.
 
-    if (!BypassHangup) {
-        mainWindow.hide();
+    if (!BypassHangup && !isSetupCheck) {
+        try {
+            mainWindow.hide();
+        } catch (e) {
+            log("init", "Failed to hide window, error: " + e);
+        }
     } else {
         mainWindow.openDevTools();
     }
@@ -203,11 +248,11 @@ function createWindow () {
       
     // Initialize remote for renderer
     require('@electron/remote/main').initialize();
-    require("@electron/remote/main").enable(mainWindow.webContents)
-      
-    // Loads main window's file.
-
-    mainWindow.loadFile('./src/index.html');
+    if (!isSetupCheck) {
+        require("@electron/remote/main").enable(setupWindow.webContents);
+    } else {
+        require("@electron/remote/main").enable(mainWindow.webContents);
+    }
       
     // Menu bar seen on some Linux DE's/WM's and macOS.
     // The main purpose is to set up keybindings.
@@ -253,11 +298,13 @@ function createWindow () {
         submenu: menuSub
     }));
     
-    Menu.setApplicationMenu(menu);
+    if (isSetupCheck) {
+        Menu.setApplicationMenu(menu);
+    }
       
     // Initalize auto update.
 
-    mainWindow.webContents.once('dom-ready', () => {autoUpdate()});
+    if (isSetupCheck) mainWindow.webContents.once('dom-ready', () => {autoUpdate()});
       
     // Intialize the loader. 
     
@@ -275,7 +322,11 @@ function createWindow () {
             if (process.platform !== 'win32') {
                 mainWindow.webContents.send('lenox', 'hid');
             }
-            loaderMain.close();
+            try {
+                loaderMain.close();
+            } catch (e) {
+                log("init", "Failed to close loader window, error: " + e);
+            }
             await sleep(750);
             mainWindow.show();
             if (windowInfo.isMaximized) {
@@ -288,6 +339,10 @@ function createWindow () {
         } catch (e) {
             error("Failed to show main process! Error: " + e);
         }
+    })
+
+    ipcMain.on('finished-setup', async(event, arg) => {
+        restart();
     })
 }
 

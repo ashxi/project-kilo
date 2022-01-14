@@ -47,12 +47,16 @@ const concreteQuirks = {
             
             if (!(document.getElementById("setup").innerHTML.includes("String sucessfully compiled."))) {
                 let str = [];
-                    
+                     
                 for (themeJSON of themes) {
                     let license = `--------Copyright information for ${themeJSON.name}\n\n` + fs.readFileSync(themeJSON.license).toString();
         
                     str.push(license);
                 }
+
+                let otherLicenses = await fs.readFileSync("installer/other_licenses.txt", "utf8");
+
+                str.push("--------Other licenses\n\n" + otherLicenses);
         
                 let htmlPatch = str.join("\n\n") + "\n\nConcrete: String sucessfully compiled, with 0 errors.";
                 htmlPatch = htmlPatch.replaceAll("\n", "<br>");
