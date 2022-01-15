@@ -176,10 +176,6 @@ async function createWindow () {
       
     // If not on windows, do not show custom frame.
 
-    if (process.platform !== 'win32') {
-        config.frame = true;
-    }
-
     log("init", "Creating main window...");
 
     isSetupCheck = await isSetup();
@@ -314,9 +310,6 @@ async function createWindow () {
     ipcMain.on('ready', async(event, arg) => {
         try {
             log("init", "Main process is preparing to be ready...");
-            if (process.platform !== 'win32') {
-                mainWindow.webContents.send('lenox', 'hid');
-            }
             try {
                 loaderMain.close();
             } catch (e) {

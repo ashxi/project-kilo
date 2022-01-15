@@ -20,15 +20,9 @@ function extractDir(dir, dest) {
 }
 
 async function main() {
-    if (process.platform !== "win32") {
-        document.querySelector(':root').style.setProperty('--titlebar-height', '0px');
-        document.querySelector(':root').style.setProperty('--rounded-corners', '0px');
-        document.querySelector(':root').style.setProperty('--linux-height', '0px');
-        document.querySelector(':root').style.setProperty('--secondary-background', '#344b4b');
-    } else {
-        await require("../src/renderer.js");
-        document.getElementById("editorTitle").innerHTML = "Installing Dependencies..."
-    }
+
+    await require("../src/renderer.js");
+    document.getElementById("editorTitle").innerHTML = "Installing Dependencies..."
 
     document.title = "Installing Dependencies...";
 

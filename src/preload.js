@@ -164,16 +164,9 @@ document.addEventListener("DOMContentLoaded", async function() {
     // Calls the initialization process.
     await loadInit();
 
-    // If not on Windows, remove custom titlebar.
-    // Else, loads the title into the DOM and calls the renderer.
-    if (process.platform !== "win32") {
-        document.querySelector(':root').style.setProperty('--titlebar-height', '0px');
-        document.querySelector(':root').style.setProperty('--rounded-corners', '0px');
-        document.querySelector(':root').style.setProperty('--linux-height', '0px');
-    } else {
-        await require("./renderer.js");
-        loadTitle();
-    }
+    // Loads the title into the DOM and calls the renderer.
+    await require("./renderer.js");
+    loadTitle();
 
     // Sends ready signal to the main process.
 
