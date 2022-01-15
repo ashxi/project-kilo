@@ -24,6 +24,7 @@ let logArr = ["[init] Initializing logs..."];
 // Function to restart the app, by using relaunch and exit.
 async function restart() {
     console.log("Restarting...");
+    await fs.writeFileSync("./log.txt", logArr.join("\n"));
     app.relaunch();
     app.exit();
 }
