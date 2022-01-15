@@ -5,7 +5,7 @@ const brew = require("../src/brewAPI.js").brew,
       unzipper = require('unzipper'),
       clone = require('git-clone/promise');
 
-ipcRenderer.send("logging", "[preload.js||installerlib] Package installer initializing...");
+ipcRenderer.send("logging", "[installerlib] Package installer initializing...");
 
 function extractDir(dir, dest) {
     return new Promise((resolve, reject) => {
@@ -113,7 +113,19 @@ let packages = [{
 
         await fs.writeFileSync("themes/icons/vscode-fluent-icons/license.txt", data.data);
     }
-}]
+}];
+
+let updatePkgs = [{
+    name: "check",
+    install: async function(tmp) {
+        
+    }
+}];
+
+async function getPackageList() {
+    if (false) return updatePkgs; // not working for now
+    return packages;
+}
 
 async function progressBar(prog) {
     if (prog == null) {
@@ -145,7 +157,7 @@ async function installPackages() {
 
     progressBar(0);
 
-    for await (let package of packages) {
+    for await (let package of await getPackageList()) {
         document.getElementById("package-name").innerHTML = package.name;
         ipcRenderer.send("logging", "[installerlib] Installing " + package.name);
         try {

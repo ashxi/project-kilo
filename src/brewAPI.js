@@ -68,10 +68,48 @@ const concreteQuirks = {
             try {
                 for await(data of JSON.parse(localStorage.getItem("projects"))) document.getElementById("listOfProjects").innerHTML += projectTemplate.replaceAll("Project1", data.name);
             } catch (e) {
-                brew.misc.crash("Error loading license files: " + e);
+                if (!e.toString().startsWith("TypeError: Cannot read properties of null")) brew.misc.crash("Error loading project list: " + e);
+            } finally {
+                document.getElementById("listOfProjects").innerHTML += `<br><button style="background-color: var(--third-background);" onclick="brew.location.replace('index.html')" class="pure-material-button-contained">Go Back</button>`;
+            }
+        },
+        projectPage: async function() {
+            window.addEventListener('keydown', function(e) {
+                if(e.keyCode == 32 && e.target == document.body) {
+                  e.preventDefault();
+                }
+              });
+
+            let projTemp = `<a href="#" onclick="brew.pj.setFileInMain('${localStorage.getItem("activeProject")}', '$filename')">$filename</a><br>`;
+            let projJSON = {};
+            document.getElementById("text-pj").innerText = localStorage.getItem("activeProject");
+
+            document.getElementById("file-list").innerHTML = "";
+
+            for await (let projectJSON of JSON.parse(localStorage.projects)) {
+                if (projectJSON.name == localStorage.getItem("activeProject")) {
+                    projJSON = projectJSON;
+                    break;
+                }
             }
 
-            document.getElementById("listOfProjects").innerHTML += `<br><button style="background-color: var(--third-background);" onclick="brew.location.replace('index.html')" class="pure-material-button-contained">Go Back</button>`;
+            let folderArr = [],
+                fileArr = [];
+            
+            for await (let project of await brew.pj.listFiles(localStorage.getItem("activeProject"))) {
+                console.log(project);
+                let projectIsDir = fs.statSync(path.join(projJSON.path, project)).isDirectory();
+
+                console.log(projectIsDir)
+
+                if (projectIsDir) {
+                    folderArr.push(projTemp.replaceAll("> $projectname", localStorage.getItem("activeProject")).replaceAll("$filename", project));
+                } else {
+                    fileArr.push(projTemp.replaceAll("$projectname", localStorage.getItem("activeProject")).replaceAll("$filename", project));
+                }
+            }
+
+            document.getElementById("file-list").innerHTML = folderArr.join("") + fileArr.join("");
         }
     }
 }
@@ -202,11 +240,14 @@ const brew = {
         if (url == "setupStage2.html" || url == "setupStage3.html") {
             await brew.location.replaceHTML(data, true);
             if (url == "setupStage2.html") {
-                concreteQuirks.DOMPatches.setup();
+                await concreteQuirks.DOMPatches.setup();
             }
         } else if (url == "projectselector.html") {
             await brew.location.replaceHTML(data);
-            concreteQuirks.DOMPatches.projectSelector();
+            await concreteQuirks.DOMPatches.projectSelector();
+        } else if (url == "project.html") {
+            await brew.location.replaceHTML(data);
+            await concreteQuirks.DOMPatches.projectPage();
         } else {
             brew.location.replaceHTML(data);
         }
@@ -372,6 +413,37 @@ const brew = {
           } else {
             return(fs.readdirSync(pathProject));
           }
+      },
+      getFile: async function(projectName, fileName) {
+        let isValidProject = false;
+        let pathProject = "";
+
+        for await(data of JSON.parse(localStorage.getItem("projects"))) {
+          if (data.name == projectName) {
+              isValidProject = true;
+              pathProject = data.path;
+              break;
+          }
+        }
+
+        if (!isValidProject) {
+            throw("Invalid Project")
+        }
+
+        return(fs.readFileSync(path.join(pathProject, fileName), "utf8"));
+      },
+      syntaxHighlight: async function(str) {
+          const highlight = require("highlight.js");
+          return await highlight.highlightAuto(str).value;
+      },
+      setFileInMain: async function(projectName, fileName) {
+          let file = await brew.pj.getFile(projectName, fileName);
+
+          document.getElementById("main-text").innerHTML = file;
+
+          let syntaxHighlight = await brew.pj.syntaxHighlight(file);
+
+          document.getElementById("main-text").innerHTML = syntaxHighlight;
       }
   }
 }

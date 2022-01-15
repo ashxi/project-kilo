@@ -1,3 +1,43 @@
 <html>
-    
+    <div class="file-sidebar">
+        <div class="project-name">&nbsp;<h20 id="text-pj">project-name</h20></div><br>
+        <div id="file-list"></div>
+    </div>
+    <div class="main-text" id="main-text"></div>
 </html>
+
+<style>
+    .file-sidebar {
+        position: sticky;
+        top: 0px;
+        left: 0px;
+        width: 150px;
+        height: 100%;
+        background-color: var(--secondary-background);
+        border-right: 2px solid var(--third-background);
+        border-top: 2px solid var(--third-background);
+        border-bottom: 2px solid var(--third-background);
+        border-radius: 0px 7px 7px 0px;
+        z-index: 100;
+    }
+
+    .project-name {
+        position: absolute;
+        font-size: 15px;
+        height: 23px;
+        width: 100%;
+        background-color: var(--third-background);
+        font-weight: bold;
+        color: white;
+        border-radius: 5px 0px 0px 5px;
+    }
+
+    .main-text {
+        position: absolute;
+        top: 0px;
+        width: 100%;
+        left: 150px;
+        white-space: pre;
+        font-family: "codeDefault";
+    }
+</style>

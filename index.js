@@ -200,25 +200,20 @@ async function createWindow () {
 
         setupWindow = new BrowserWindow(config);
         setupWindow.loadFile(filePath);
-        //setupWindow.toggleDevTools();
     } else {
         mainWindow = new BrowserWindow(config);
         mainWindow.loadFile(filePath);
-    }
 
-    const BypassHangup = windowInfo.bypassHangup;
-      
-    // If local debug mode is true, we don't hide the window and open dev tools instead.
-    // Else, hide the window.
+        // If local debug mode is true, we don't hide the window and open dev tools instead.
+        // Else, hide the window.
 
-    if (!BypassHangup && !isSetupCheck) {
-        try {
+        //FIXME: This Window isn't hiding!
+
+        if (!windowInfo.bypassHangup) {
             mainWindow.hide();
-        } catch (e) {
-            log("init", "Failed to hide window, error: " + e);
+        } else {
+            mainWindow.toggleDevTools();
         }
-    } else {
-        mainWindow.openDevTools();
     }
       
     // Initiaizes the loader window.

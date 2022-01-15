@@ -208,7 +208,7 @@ a:hover {
   display: block;
   height: 100%;
   width: var(--sidebar-length);
-  background-color: var(--secondary-background);
+  background-color: var(--titlebar-bg);
   z-index: 1;
 }
 
