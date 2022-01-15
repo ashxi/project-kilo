@@ -176,4 +176,8 @@ document.addEventListener("DOMContentLoaded", async function() {
 
     await loadKeybindings();
     ipcRenderer.send("logging", "[preload.js] Keybindings loaded.");
+
+    // Loads the project daemon.
+    require("./projectDaemon.js");
+    ipcRenderer.send("logging", "[preload.js] Project daemon loading...");
 }) 

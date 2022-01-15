@@ -437,13 +437,8 @@ const brew = {
           return await highlight.highlightAuto(str).value;
       },
       setFileInMain: async function(projectName, fileName) {
-          document.getElementsByClassName("pg-fix")[0].style.width = "calc(100% - 150px)";
-          await brew.misc.sleep(200);
-          let file = await brew.pj.getFile(projectName, fileName);
-          let syntaxHighlight = await brew.pj.syntaxHighlight(file);
-
-          document.getElementById("main-text").innerHTML = syntaxHighlight;
-          document.getElementsByClassName("pg-fix")[0].style.width = "0px";
+          localStorage.setItem("activeFile", fileName);
+          localStorage.setItem("projectOpen", "true");
       }
   }
 }
