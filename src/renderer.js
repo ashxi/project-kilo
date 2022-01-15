@@ -42,6 +42,7 @@ function handleWindowControls() {
         document.getElementById('max-button').addEventListener("click", event => {
             ipcRenderer.send("logging", "[renderer.js] Maximizing window...");
             win.maximize();
+            document.body.classList.add('maximized');
         });
     } catch (e) {
         ipcRenderer.send("logging", '[renderer.js] Failed to add event listener for the maximize button.')   
@@ -52,6 +53,7 @@ function handleWindowControls() {
         document.getElementById('restore-button').addEventListener("click", event => {
             ipcRenderer.send("logging", "[renderer.js] Restoring window...");
             win.unmaximize();
+            document.body.classList.remove('maximized');
         });
     } catch (e) {
         ipcRenderer.send("logging", '[renderer.js] Failed to add event listener for the restore button.')
@@ -65,27 +67,6 @@ function handleWindowControls() {
         });
     } catch (e) {
         ipcRenderer.send("logging", '[renderer.js] Failed to add event listener for the close button.')
-    }
-
-    // Toggles the maximize and restore buttons.
-    toggleMaxRestoreButtons();
-    // When the window is maximized or unmaximized, toggle the maximize and restore buttons.
-    win.on('maximize', toggleMaxRestoreButtons);
-    win.on('unmaximize', toggleMaxRestoreButtons);
-
-    // Function to toggle the maximize and restore buttons.
-    function toggleMaxRestoreButtons() {
-        // If it's maximized, we add the maximize class to the body.
-        // Else, we remove it.
-        try {
-            if (win.isMaximized()) {
-                document.body.classList.add('maximized');
-            } else {
-                document.body.classList.remove('maximized');
-            }
-        } catch (e) {
-            ipcRenderer.send("logging", '[renderer.js] Failed to toggle maximize/restore buttons.')
-        }
     }
 }
 
