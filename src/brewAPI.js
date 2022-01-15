@@ -74,12 +74,6 @@ const concreteQuirks = {
             }
         },
         projectPage: async function() {
-            window.addEventListener('keydown', function(e) {
-                if(e.keyCode == 32 && e.target == document.body) {
-                  e.preventDefault();
-                }
-              });
-
             let projTemp = `<a href="#" onclick="brew.pj.setFileInMain('${localStorage.getItem("activeProject")}', '$filename')">$filename</a><br>`;
             let projJSON = {};
             document.getElementById("text-pj").innerText = localStorage.getItem("activeProject");

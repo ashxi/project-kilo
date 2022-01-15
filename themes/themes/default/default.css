@@ -13,7 +13,9 @@
     /* White Config */
     --white-color: #ffffff;
     --white-secondary-color: #f7f7f7d2;
-    /* For glorious syntax highlighting */
+    /* Cursor config */
+    --cursor-color: white;
+    /* For syntax highlighting */
     --white: #fdf4ed;
     --mono-1:  #abb2bf;
     --mono-2:  #818896;

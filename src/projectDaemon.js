@@ -4,8 +4,21 @@ const brew = require("./brewAPI").brew,
 let currentFile = null;
 let currentText = "";
 
+window.addEventListener('keydown', function(e) {
+    /*
+    * keycode 38 is up arrow
+    * keycode 40 is down arrow
+    * keycode 37 is left arrow
+    * keycode 39 is right arrow
+    */
+    e.preventDefault();
+    console.log(e.keyCode);
+});
+
 async function main() {
     ipcRenderer.send("logging", "[projectDaemon.js] Project daemon loaded.");
+
+    let cursor = `<b class="cursor" id="cursor">B</b>`;
 
     while (true) {
         await brew.misc.sleep(100);
@@ -18,7 +31,7 @@ async function main() {
             }
     
             if (typeof localStorage.getItem("projectOpen") !== "object") {
-                console.log("active!", localStorage.getItem("activeFile"));
+                ipcRenderer.send("logging", "[projectDaemon.js] Switching to file " + localStorage.getItem("activeFile"));
                 document.getElementsByClassName("pg-fix")[0].style.width = "calc(100% - 150px)";
                 await brew.misc.sleep(200);
                 let file = await brew.pj.getFile(localStorage.getItem("activeProject"), localStorage.getItem("activeFile"));
@@ -26,7 +39,7 @@ async function main() {
                 currentFile = localStorage.getItem("activeFile");
                 let syntaxHighlight = await brew.pj.syntaxHighlight(file);
       
-                document.getElementById("main-text").innerHTML = syntaxHighlight;
+                document.getElementById("main-text").innerHTML = cursor + syntaxHighlight;
                 document.getElementsByClassName("pg-fix")[0].style.width = "0px";
 
                 document.title = "Concrete | " + currentFile;
@@ -40,7 +53,7 @@ async function main() {
                 if (file !== currentText) {
                     document.getElementsByClassName("pg-fix")[0].style.width = "calc(100% - 150px)";
                     await brew.misc.sleep(200);
-                    document.getElementById("main-text").innerHTML = await brew.pj.syntaxHighlight(file);
+                    document.getElementById("main-text").innerHTML = cursor + await brew.pj.syntaxHighlight(file);
                     document.getElementsByClassName("pg-fix")[0].style.width = "0px";
 
                     currentText = file;

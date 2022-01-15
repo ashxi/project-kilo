@@ -45,6 +45,7 @@
         top: 0px;
         width: 100%;
         left: 150px;
+        cursor: text;
     }
 
     #main-text {
@@ -66,5 +67,26 @@
         left: 150px;
         width: 0px;
         z-index: 0;
+    }
+
+    .cursor {
+        
+        font-size: 12px;
+        background-color: var(--cursor-color);
+        color: var(--cursor-color);
+        position: relative;
+        opacity: 0.5;
+        height: 1.5em;
+        width: 3px;
+        max-width: 3px;
+        overflow: hidden;
+        text-indent: -5px;
+        display: inline-block;
+        text-decoration: blink;
+        animation: blinker 1s linear infinite;
+    }
+
+    @keyframes blinker {  
+        50% { opacity: 0.0; }
     }
 </style>
