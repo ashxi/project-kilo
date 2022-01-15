@@ -1,9 +1,17 @@
+<script src="../installer/materialize/js/materialize.min.js"></script>
+<link href="../installer/materialize/css/materialize.min.css" rel="stylesheet"></script>
+
 <html>
+    <div class="pg-fix progress materialize-bg-1">
+        <div id="progress-bar" class="indeterminate materialize-bg-2"></div>
+    </div>
+
     <div class="file-sidebar">
         <div class="project-name">&nbsp;<h20 id="text-pj">project-name</h20></div><br>
         <div id="file-list"></div>
     </div>
-    <div class="main-text" id="main-text"></div>
+
+    <div class="main-text"><h20 id="main-text"></h20><br></div>
 </html>
 
 <style>
@@ -37,7 +45,26 @@
         top: 0px;
         width: 100%;
         left: 150px;
+    }
+
+    #main-text {
         white-space: pre;
         font-family: "codeDefault";
+    }
+
+    .materialize-bg-1 {
+        background-color: var(--primary-background);
+    }
+
+    .materialize-bg-2 {
+        background-color: var(--secondary-background);
+    }
+
+    .pg-fix {
+        position: absolute;
+        top: 0px;
+        left: 150px;
+        width: 0px;
+        z-index: 0;
     }
 </style>
