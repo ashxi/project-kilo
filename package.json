@@ -5,7 +5,10 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "electron index.js"
+    "start": "electron index.js devMode",
+    "build": "electron index.js build",
+    "build-win": "npm install && npm run build && npm exec electron-packager ./ Concrete --all --overwrite && echo Writing zip file... && tar acf Concrete-win32-x64.zip Concrete-win32-x64/* && echo Wrote Concrete zip file to 'Concrete-win32-x64.zip'",
+    "cleanup-win": "del Concrete-win32-x64.zip /s /q && rmdir /s /q Concrete-win32-x64"
   },
   "repository": {
     "type": "git",
@@ -22,7 +25,9 @@
     "@electron/remote": "^2.0.1",
     "axios": "^0.24.0",
     "electron": "^15.3.0",
+    "electron-packager": "^15.4.0",
     "filehound": "^1.17.5",
+    "fs-extra": "^10.0.0",
     "git-clone": "^0.2.0",
     "highlight.js": "^11.3.1",
     "unzipper": "^0.10.11"

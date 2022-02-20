@@ -45,23 +45,26 @@ const concreteQuirks = {
         setup: async function() {
             const themes = await brew.misc.loadThemes();
             
-            if (!(document.getElementById("setup").innerHTML.includes("String sucessfully compiled."))) {
-                let str = [];
+            let str = [];
                      
-                for (themeJSON of themes) {
-                    let license = `--------Copyright information for ${themeJSON.name}\n\n` + fs.readFileSync(themeJSON.license).toString();
-        
-                    str.push(license);
-                }
-
-                let otherLicenses = await fs.readFileSync("installer/other_licenses.txt", "utf8");
-
-                str.push("--------Other licenses\n\n" + otherLicenses);
-        
-                let htmlPatch = str.join("\n\n") + "\n\nConcrete: String sucessfully compiled, with 0 errors.";
-                htmlPatch = htmlPatch.replaceAll("\n", "<br>");
-                document.getElementById("setup").innerHTML = htmlPatch;
+            for (themeJSON of themes) {
+                let license = `--------Copyright information for ${themeJSON.name}\n\n` + fs.readFileSync(themeJSON.license).toString();
+    
+                str.push(license);
             }
+
+            let otherLicenses = "";
+            if (process.argv[2] == "devMode") {
+                otherLicenses = await fs.readFileSync("installer/other_licenses.txt", "utf8");
+            } else {
+                otherLicenses = await fs.readFileSync("resources/app/installer/other_licenses.txt", "utf8");
+            }
+
+            str.push("--------Other licenses\n\n" + otherLicenses);
+    
+            let htmlPatch = str.join("\n\n") + "\n\nConcrete: String sucessfully compiled, with 0 errors.";
+            htmlPatch = htmlPatch.replaceAll("\n", "<br>");
+            document.getElementById("setup").innerHTML = htmlPatch;
         },
         projectSelector: async function() {
             const projectTemplate = `<a href="#" onclick="brew.pj.prompt.openProject('Project1');">Project1</a><br>`;

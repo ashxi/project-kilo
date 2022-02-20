@@ -12,3 +12,6 @@ node_modules/
 /isSetup.txt
 /yarn.lock
 /tmp
+/yarn-error.log
+/Concrete-win32-x64 
+/Concrete-win32-x64.zip

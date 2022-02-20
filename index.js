@@ -34,12 +34,18 @@ async function restart() {
  * @returns {boolean} true if the app is setup, false if not.
  */
 async function isSetup() {
-    try {
-        await fs.readFileSync("./isSetup.txt");
-        return true;
-    } catch (e) {
-        return false;
+    if (process.argv[2] == "build") return false;
+
+    if (process.argv[2] == "devMode") {
+        try {
+            await fs.readFileSync("./isSetup.txt");
+            return true;
+        } catch (e) {
+            return false;
+        }
     }
+
+    return true;
 }
 
 /**
@@ -331,7 +337,11 @@ async function createWindow () {
     })
 
     ipcMain.on('finished-setup', async(event, arg) => {
-        restart();
+        if (process.argv[2] == "build") {
+            await app.quit();
+        } else {
+            await restart();
+        }
     })
 }
 
@@ -354,6 +364,12 @@ app.on('window-all-closed', async function() {
 
 ipcMain.on('restart', async(event, arg) => {
     restart();
+})
+
+// Kill self when event recieved.
+
+ipcMain.on('kill', async(event, arg) => {
+    app.quit();
 })
 
 // When recieved error signal, force quit.
