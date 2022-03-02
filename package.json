@@ -8,7 +8,9 @@
     "start": "electron index.js devMode",
     "build": "electron index.js build",
     "build-win": "npm install && npm run build && npm exec electron-packager ./ Concrete --all --overwrite && echo Writing zip file... && tar acf Concrete-win32-x64.zip Concrete-win32-x64/* && echo Wrote Concrete zip file to 'Concrete-win32-x64.zip'",
-    "cleanup-win": "del Concrete-win32-x64.zip /s /q && rmdir /s /q Concrete-win32-x64"
+    "build-linux": "npm install && npm run build && npm exec electron-packager ./ Concrete --all --overwrite && echo Writing zip file... && zip Concrete-linux-x64.zip Concrete-linux-x64/* && echo Wrote Concrete zip file to 'Concrete-linux-x64.zip'",
+    "cleanup-win": "del Concrete-win32-x64.zip /s /q && rmdir /s /q Concrete-win32-x64",
+    "cleanup-linux": "rm -rf Concrete-linux-x64.zip Concrete-linux-x64"
   },
   "repository": {
     "type": "git",
