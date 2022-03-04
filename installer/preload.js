@@ -132,76 +132,11 @@ let packages = [{
     }
 }];
 
-let updatePkgs = [{
-    name: "Moving",
-    install: async function (tmp) {
-        /*
-        if (fs.existsSync('./stage1_update.txt')) return;
-
-        try {
-            async function copyDir(src, dest) {
-                const { promises: fsb } = require("fs");
-
-                await fsb.mkdir(dest, { recursive: true });
-                let entries = await fsb.readdir(src, { withFileTypes: true });
-            
-                for (let entry of entries) {
-                    let srcPath = path.join(src, entry.name);
-                    let destPath = path.join(dest, entry.name);
-            
-                    entry.isDirectory() ?
-                        await copyDir(srcPath, destPath) :
-                        await fsb.copyFile(srcPath, destPath);
-                }
-            }
-
-            try {
-                await fs.rmdirSync(path.join(os.tmpdir(), "stage1_update"));
-            } catch (e) {
-                console.log(e);
-            }
-
-            await fs.writeFileSync("./stage1_update.txt", "true");
-            
-            if (os.platform() == "win32") { 
-                await fs.writeFileSync(os.tmpdir() + "/stage1p2_update.bat", `cd "${path.join(os.tmpdir(), "stage1_update")}"\nnpm start`);
-                await fs.writeFileSync(os.tmpdir() + "/stage1_update.bat", `mkdir "${path.join(os.tmpdir(), "stage1_update")}"\necho A | xcopy /E /H /C /I "${path.join(__dirname, "..", "*")}" "${path.join(os.tmpdir(), "stage1_update")}"`);
-
-                await fs.rmSync("./stage1_update.txt"); 
-
-                let file = await fs.readFileSync("./package.json", "utf8");
-                await fs.writeFileSync(path.join(os.tmpdir(), "stage1_update", "package.json"), file);
-
-                //spawn('start', [path.join(os.tmpdir(), "stage1_update.bat")], {
-                //    stdio: 'ignore', // piping all stdio to /dev/null
-                //    detached: true
-                //}).unref();
-
-                console.log(true);
-
-                contextBridge.exposeInMainWorld("path", path);
-                contextBridge.exposeInMainWorld("os", os);
-                contextBridge.exposeInMainWorld("runShell", runShell);
-
-                await runShell(`conhost ${path.join(os.tmpdir(), "stage1_update.bat")}`);
-                await runShell(`conhost ${path.join(os.tmpdir(), "stage1p2_update.bat")}`);
-            } else {
-                alert('Updating is not supported on this platform, yet.');
-                throw("Updating is not supported on this platform, yet.");
-            }
-        } catch (e) {
-            console.error(e);
-        }
-        */
-    }
-}];
-
 function crash(msg) {
     ipcRenderer.send("error", msg);
 }
 
 async function getPackageList() {
-    if (false) return updatePkgs; // not working for now
     return packages;
 }
 
